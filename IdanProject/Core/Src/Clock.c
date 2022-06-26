@@ -5,6 +5,15 @@
  *      Author: student
  */
 
-#include <Clock.h>
+#include "Clock.h"
 
+Clock myClock;
 
+void ClockInit(){
+	myClock.tickCount=0;
+
+}
+
+uint32_t ClockTick(){
+	return myClock.tickCount;
+}

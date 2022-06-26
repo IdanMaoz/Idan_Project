@@ -1,7 +1,6 @@
 "./Core/Src/Button.o"
 "./Core/Src/Buzzer.o"
 "./Core/Src/Clock.o"
-"./Core/Src/InputControl.o"
 "./Core/Src/Led.o"
 "./Core/Src/LedState.o"
 "./Core/Src/MyMain.o"

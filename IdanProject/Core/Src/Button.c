@@ -9,6 +9,7 @@
 #include "Button.h"
 
 
+
 #define LONG_PRESS_MS 500
 
 
@@ -23,6 +24,8 @@ void buttonInit(Button* button, ButtonName name, GPIO_TypeDef* gpioPort, uint16_
 	button->gpioPin = gpioPin;
 	button->pressTime = 0;
 	button->btState=BUTTON_STATE_NONE;
+	button->waitToSecondPress=0;
+	button->counter=0;
 }
 
 
@@ -39,17 +42,42 @@ void buttonOnInterrupt(Button* button, uint16_t pin)
 {
 	if (pin == button->gpioPin) {
 		if (HAL_GPIO_ReadPin(button->gpioPort, button->gpioPin) == 0) {
-			button->pressTime = HAL_GetTick();
+			button->pressTime = myClock.tickCount;
 		}
 		else {
-			if (HAL_GetTick() - button->pressTime > LONG_PRESS_MS) {
+			button->counter=0;
+			if (myClock.tickCount - button->pressTime > LONG_PRESS_MS) {
 				button->btState=BUTTON_STATE_LONG_PRESS;
 
 			}
-			else {
-				button->btState=BUTTON_STATE_PRESS;
+			else if (button->waitToSecondPress) {
+				button->btState=BUTTON_STATE_DOUBLE_PRESS;
+				button->waitToSecondPress=0;
 			}
+			else  {
+
+				button->waitToSecondPress = 1;
+
+			}
+
+
 		}
 
 	}
 }
+
+void buttonTimerInterrupt(Button* bt){
+	if(bt->waitToSecondPress){
+		bt->counter++;
+		if(bt->counter>300){
+			bt->btState=BUTTON_STATE_PRESS;
+			bt->waitToSecondPress=0;
+		}
+	}
+}
+
+void resetConterButton(Button* bt){
+	bt->counter=0;
+}
+
+

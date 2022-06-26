@@ -8,7 +8,6 @@ C_SRCS += \
 ../Core/Src/Button.c \
 ../Core/Src/Buzzer.c \
 ../Core/Src/Clock.c \
-../Core/Src/InputControl.c \
 ../Core/Src/Led.c \
 ../Core/Src/LedState.c \
 ../Core/Src/MyMain.c \
@@ -24,7 +23,6 @@ OBJS += \
 ./Core/Src/Button.o \
 ./Core/Src/Buzzer.o \
 ./Core/Src/Clock.o \
-./Core/Src/InputControl.o \
 ./Core/Src/Led.o \
 ./Core/Src/LedState.o \
 ./Core/Src/MyMain.o \
@@ -40,7 +38,6 @@ C_DEPS += \
 ./Core/Src/Button.d \
 ./Core/Src/Buzzer.d \
 ./Core/Src/Clock.d \
-./Core/Src/InputControl.d \
 ./Core/Src/Led.d \
 ./Core/Src/LedState.d \
 ./Core/Src/MyMain.d \
@@ -60,7 +57,7 @@ Core/Src/%.o Core/Src/%.su: ../Core/Src/%.c Core/Src/subdir.mk
 clean: clean-Core-2f-Src
 
 clean-Core-2f-Src:
-	-$(RM) ./Core/Src/Button.d ./Core/Src/Button.o ./Core/Src/Button.su ./Core/Src/Buzzer.d ./Core/Src/Buzzer.o ./Core/Src/Buzzer.su ./Core/Src/Clock.d ./Core/Src/Clock.o ./Core/Src/Clock.su ./Core/Src/InputControl.d ./Core/Src/InputControl.o ./Core/Src/InputControl.su ./Core/Src/Led.d ./Core/Src/Led.o ./Core/Src/Led.su ./Core/Src/LedState.d ./Core/Src/LedState.o ./Core/Src/LedState.su ./Core/Src/MyMain.d ./Core/Src/MyMain.o ./Core/Src/MyMain.su ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/music.d ./Core/Src/music.o ./Core/Src/music.su ./Core/Src/stm32l4xx_hal_msp.d ./Core/Src/stm32l4xx_hal_msp.o ./Core/Src/stm32l4xx_hal_msp.su ./Core/Src/stm32l4xx_it.d ./Core/Src/stm32l4xx_it.o ./Core/Src/stm32l4xx_it.su ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32l4xx.d ./Core/Src/system_stm32l4xx.o ./Core/Src/system_stm32l4xx.su
+	-$(RM) ./Core/Src/Button.d ./Core/Src/Button.o ./Core/Src/Button.su ./Core/Src/Buzzer.d ./Core/Src/Buzzer.o ./Core/Src/Buzzer.su ./Core/Src/Clock.d ./Core/Src/Clock.o ./Core/Src/Clock.su ./Core/Src/Led.d ./Core/Src/Led.o ./Core/Src/Led.su ./Core/Src/LedState.d ./Core/Src/LedState.o ./Core/Src/LedState.su ./Core/Src/MyMain.d ./Core/Src/MyMain.o ./Core/Src/MyMain.su ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/music.d ./Core/Src/music.o ./Core/Src/music.su ./Core/Src/stm32l4xx_hal_msp.d ./Core/Src/stm32l4xx_hal_msp.o ./Core/Src/stm32l4xx_hal_msp.su ./Core/Src/stm32l4xx_it.d ./Core/Src/stm32l4xx_it.o ./Core/Src/stm32l4xx_it.su ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32l4xx.d ./Core/Src/system_stm32l4xx.o ./Core/Src/system_stm32l4xx.su
 
 .PHONY: clean-Core-2f-Src
 

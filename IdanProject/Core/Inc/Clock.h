@@ -13,9 +13,15 @@
 typedef struct  Clock_
 {
 
-	uint32_t tick;
+	uint32_t tickCount;
 
 } Clock;
+
+extern Clock myClock;
+
+void ClockInit();
+uint32_t ClockTick();
+
 
 
 

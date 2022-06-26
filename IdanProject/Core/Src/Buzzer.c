@@ -17,7 +17,7 @@ int i=0;
 int reload=0;
 const int Notes[] = {NOTE_1_G, NOTE_1_E, NOTE_1_E, NOTE_1_F, NOTE_1_D, NOTE_1_D, NOTE_1_C, NOTE_1_D, NOTE_1_E, NOTE_1_F, NOTE_1_G, NOTE_1_G, NOTE_1_G};
 const int Lengths[] = {LEN_4, LEN_4, LEN_2, LEN_4, LEN_4, LEN_2, LEN_4, LEN_4, LEN_4, LEN_4, LEN_4, LEN_4, LEN_2};
-
+int len=sizeof(Notes)/sizeof(Notes[i]);
 
 void buzzerInit(Buzzer * buzzer)
 {
@@ -39,12 +39,13 @@ void BuzzerInterrupt(Buzzer * buzzer){
 	if (buzzer->counter < buzzer->maxCounter) {
 		return;
 	}
+
 	reload=(100000/Notes[i])-1;
 	__HAL_TIM_SET_COUNTER(&htim3, 0);
 	__HAL_TIM_SET_AUTORELOAD(&htim3, reload);
 	__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, reload/2);
 
-	if(i==12){
+	if(i==(len-1)){
 		i=0;
 	}
 	else{
@@ -53,24 +54,6 @@ void BuzzerInterrupt(Buzzer * buzzer){
 
 	buzzer->maxCounter=1000/Lengths[i];
 	buzzer->counter=0;
-
-
-
-//	printf("c %d\n\r",buzzer->counter);
-//
-//	printf("mc %d\n\r",buzzer->maxCounter);
-
-//	if(buzzer->counter >= buzzer->maxCounter){
-//
-//		buzzer->maxCounter=1000/Lengths[i];
-//	}
-
-
-	//int myAutoReload=9999/Lengths[i];
-	//__HAL_TIM_SET_COUNTER(&htim6, 0);
-	//__HAL_TIM_SET_AUTORELOAD(&htim6, myAutoReload);
-
-
 
 }
 
@@ -87,6 +70,18 @@ void changeBuzzerToOff(Buzzer * buzzer){
 
 void resetBuzzer(){
 	i=0;
+
+}
+
+void stopBuzzer(){
+
+	HAL_TIM_Base_Stop(&htim3);
+	HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_1);
+}
+
+void startBuzzer(){
+	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
+	HAL_TIM_Base_Start(&htim3);
 
 }
 

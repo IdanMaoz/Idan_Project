@@ -10,6 +10,7 @@
 
 #include <stdint.h>
 #include "main.h"
+#include "Clock.h"
 
 typedef enum ButtonState_
 {
@@ -34,7 +35,11 @@ typedef struct  Button_
 	uint16_t gpioPin;
 	uint32_t pressTime;
 	Button_STATE btState;
+	int counter;
+	int waitToSecondPress;
+
 } Button;
+
 
 
 void buttonInit(Button* button, ButtonName name, GPIO_TypeDef* gpioPort, uint16_t gpioPin);
@@ -44,5 +49,10 @@ void buttonOnInterrupt(Button* button, uint16_t pin);
 Button_STATE getButtonState();
 
 void changeButtonStateToNone(Button *bt);
+
+void buttonTimerInterrupt(Button* bt);
+
+
+void resetConterButton(Button* bt);
 
 #endif /* INC_BUTTON_H_ */
