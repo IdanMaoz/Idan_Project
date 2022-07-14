@@ -9,11 +9,13 @@
 
 Clock myClock;
 
-void ClockInit(){
+void Clock_init()
+{
 	myClock.tickCount=0;
 
 }
 
-uint32_t ClockTick(){
+uint32_t Clock_getTick()
+{
 	return myClock.tickCount;
 }

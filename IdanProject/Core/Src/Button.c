@@ -17,7 +17,7 @@ extern  TIM_HandleTypeDef htim3;
 
 
 
-void buttonInit(Button* button, ButtonName name, GPIO_TypeDef* gpioPort, uint16_t gpioPin)
+void Button_init(Button* button, ButtonName name, GPIO_TypeDef* gpioPort, uint16_t gpioPin)
 {
 	button->name = name;
 	button->gpioPort = gpioPort;
@@ -29,16 +29,17 @@ void buttonInit(Button* button, ButtonName name, GPIO_TypeDef* gpioPort, uint16_
 }
 
 
-Button_STATE  getButtonState(Button* bt)
+ButtonState  Button_getState(Button* bt)
 {
 	return bt->btState;
 }
 
-void changeButtonStateToNone(Button *bt){
+void Button_changeStateToNone(Button *bt)
+{
 	bt->btState=BUTTON_STATE_NONE;
 }
 
-void buttonOnInterrupt(Button* button, uint16_t pin)
+void Button_onInterrupt(Button* button, uint16_t pin)
 {
 	if (pin == button->gpioPin) {
 		if (HAL_GPIO_ReadPin(button->gpioPort, button->gpioPin) == 0) {
@@ -66,7 +67,8 @@ void buttonOnInterrupt(Button* button, uint16_t pin)
 	}
 }
 
-void buttonTimerInterrupt(Button* bt){
+void Button_timerInterrupt(Button* bt)
+{
 	if(bt->waitToSecondPress){
 		bt->counter++;
 		if(bt->counter>300){
@@ -76,7 +78,8 @@ void buttonTimerInterrupt(Button* bt){
 	}
 }
 
-void resetConterButton(Button* bt){
+void Button_resetCounter(Button* bt)
+{
 	bt->counter=0;
 }
 

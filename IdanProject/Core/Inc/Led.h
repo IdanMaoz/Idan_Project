@@ -11,19 +11,19 @@
 
 typedef struct Led_
 {
-	LED_STATE state;
+	LedState state;
 	int counter;
 	int maxCounter;
 	GPIO_TypeDef* gpioPort;
 	uint16_t gpioPin;
-} LED;
+} Led;
 
-void ledInit(LED* led, GPIO_TypeDef* gpioPort, uint16_t gpioPin);
-void ledOn(LED* led);
-void ledOff(LED* led);
-void ledBlink(LED* led, int period);
-void ledOnTimerInterrupt(LED* led);
-void ledOnPeriodicTask(LED* led);
-
+void Led_init(Led* led, GPIO_TypeDef* gpioPort, uint16_t gpioPin);
+void Led_On(Led* led);
+void Led_Off(Led* led);
+void Led_Blink(Led* led, int period);
+void Led_OnTimerInterrupt(Led* led);
+void Led_OnPeriodicTask(Led* led);
+void Led_Brightness(Led* led ,int level);
 
 #endif /* INC_LED_H_ */

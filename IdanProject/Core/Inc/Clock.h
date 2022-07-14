@@ -19,8 +19,8 @@ typedef struct  Clock_
 
 extern Clock myClock;
 
-void ClockInit();
-uint32_t ClockTick();
+void Clock_init();
+uint32_t Clock_getTick();
 
 
 

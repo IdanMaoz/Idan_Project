@@ -8,9 +8,10 @@
 #ifndef INC_BUTTON_H_
 #define INC_BUTTON_H_
 
-#include <stdint.h>
+
 #include "main.h"
 #include "Clock.h"
+#include <stdint.h>
 
 typedef enum ButtonState_
 {
@@ -19,7 +20,7 @@ typedef enum ButtonState_
 	BUTTON_STATE_LONG_PRESS,
 	BUTTON_STATE_DOUBLE_PRESS,
 
-} Button_STATE;
+} ButtonState;
 
 
 typedef enum ButtonName_
@@ -34,7 +35,7 @@ typedef struct  Button_
 	GPIO_TypeDef* gpioPort;
 	uint16_t gpioPin;
 	uint32_t pressTime;
-	Button_STATE btState;
+	ButtonState btState;
 	int counter;
 	int waitToSecondPress;
 
@@ -42,17 +43,17 @@ typedef struct  Button_
 
 
 
-void buttonInit(Button* button, ButtonName name, GPIO_TypeDef* gpioPort, uint16_t gpioPin);
+void Button_init(Button* button, ButtonName name, GPIO_TypeDef* gpioPort, uint16_t gpioPin);
 
-void buttonOnInterrupt(Button* button, uint16_t pin);
+void Button_onInterrupt(Button* button, uint16_t pin);
 
-Button_STATE getButtonState();
+ButtonState Button_getState();
 
-void changeButtonStateToNone(Button *bt);
+void Button_changeStateToNone(Button *bt);
 
-void buttonTimerInterrupt(Button* bt);
+void Button_timerInterrupt(Button* bt);
 
 
-void resetConterButton(Button* bt);
+void Button_resetCounter(Button* bt);
 
 #endif /* INC_BUTTON_H_ */

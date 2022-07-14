@@ -7,27 +7,30 @@
 
 #include "Led.h"
 
-void ledInit(LED* led, GPIO_TypeDef* gpioPort, uint16_t gpioPin)
+#define MAX_BRIGHNESS_LEVEL 10
+
+void Led_init(Led* led, GPIO_TypeDef* gpioPort, uint16_t gpioPin)
 {
 	led->state = STATE_OFF;
 	led->gpioPort = gpioPort;
 	led->gpioPin = gpioPin;
 }
 
-void ledOn(LED* led)
+void Led_On(Led* led)
 {
 	led->state = STATE_FULL;
 	HAL_GPIO_WritePin(led->gpioPort, led->gpioPin, 1);
 
+
 }
 
-void ledOff(LED* led)
+void Led_Off(Led* led)
 {
 	led->state = STATE_OFF;
 	HAL_GPIO_WritePin(led->gpioPort, led->gpioPin, 0);
 }
 
-void ledBlink(LED* led, int period)
+void Led_Blink(Led* led, int period)
 {
 	led->state = STATE_BLINK;
 	led->counter = 0;
@@ -35,7 +38,19 @@ void ledBlink(LED* led, int period)
 	HAL_GPIO_WritePin(led->gpioPort, led->gpioPin, 0);
 }
 
-void ledOnTimerInterrupt(LED* led)
+void Led_Brightness(Led* led ,int level)
+{
+	if (level < 0 || level > 10) {
+		return;
+	}
+	led->state = STATE_BRIGHTNESS;
+	led->counter=0;
+	led->maxCounter=level;
+
+
+}
+
+void Led_OnTimerInterrupt(Led* led)
 {
 	if (led->state == STATE_BLINK) {
 		led->counter++;
@@ -43,5 +58,15 @@ void ledOnTimerInterrupt(LED* led)
 			HAL_GPIO_TogglePin(led->gpioPort, led->gpioPin);
 			led->counter = 0;
 		}
+	}
+
+	if(led->state==STATE_BRIGHTNESS){
+		if(led->counter==0){
+			HAL_GPIO_WritePin(led->gpioPort, led->gpioPin, 1);
+		}
+		else if(led->counter==led->maxCounter){
+			HAL_GPIO_WritePin(led->gpioPort, led->gpioPin, 0);
+		}
+		led->counter=(led->counter+1)%MAX_BRIGHNESS_LEVEL;
 	}
 }

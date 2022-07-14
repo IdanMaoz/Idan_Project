@@ -8,30 +8,33 @@
 #ifndef INC_BUZZER_H_
 #define INC_BUZZER_H_
 
-#include <stdint.h>
+
 #include "main.h"
+#include <stdint.h>
 
 typedef enum BuzzerState_
 {
 	BUZZER_STATE_OFF,
 	BUZZER_STATE_ON,
 
-} Buzzer_STATE;
+} BuzzerState;
 
 typedef struct  Buzzer_
 {
 
 	int counter;
 	int maxCounter;
-	Buzzer_STATE bzState;
+	BuzzerState bzState;
 
 } Buzzer;
 
 
 
-void buzzerInit(Buzzer * buzzer);
-void BuzzerInterrupt();
-void resetBuzzer();
-void changeBuzzerToOn(Buzzer * buzzer);
-void changeBuzzerToOff(Buzzer * buzzer);
+void Buzzer_init(Buzzer * buzzer);
+void Buzzer_interrupt();
+void Buzzer_reset();
+void Buzzer_changeToOn(Buzzer * buzzer);
+void Buzzer_changeToOff(Buzzer * buzzer);
+void Buzzer_stop();
+void Buzzer_start();
 #endif /* INC_BUZZER_H_ */

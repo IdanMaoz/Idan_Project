@@ -8,9 +8,9 @@
 #include "LedState.h"
 #include "Led.h"
 
-LED_STATE _currentState = STATE_OFF;
+LedState _currentState = STATE_OFF;
 
-LED_STATE changeState()
+LedState Led_changeState()
 {
 	switch (_currentState)
 	{
@@ -41,12 +41,12 @@ LED_STATE changeState()
 	return _currentState;
 }
 
-LED_STATE  getState()
+LedState  Led_getState()
 {
 	return _currentState;
 }
 
-void setState(LED_STATE  newState)
+void Led_setState(LedState  newState)
 {
 	_currentState = newState;
 }
