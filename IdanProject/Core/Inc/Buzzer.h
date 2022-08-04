@@ -31,10 +31,10 @@ typedef struct  Buzzer_
 
 
 void Buzzer_init(Buzzer * buzzer);
-void Buzzer_interrupt();
+void Buzzer_interrupt(void * obj);
 void Buzzer_reset();
 void Buzzer_changeToOn(Buzzer * buzzer);
 void Buzzer_changeToOff(Buzzer * buzzer);
-void Buzzer_stop();
-void Buzzer_start();
+void Buzzer_stop(Buzzer * buzzer);
+void Buzzer_start(Buzzer * buzzer);
 #endif /* INC_BUZZER_H_ */

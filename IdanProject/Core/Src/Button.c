@@ -7,7 +7,7 @@
 
 #include "main.h"
 #include "Button.h"
-
+#include "MainTimer.h"
 
 
 #define LONG_PRESS_MS 500
@@ -49,31 +49,31 @@ void Button_onInterrupt(Button* button, uint16_t pin)
 			button->counter=0;
 			if (myClock.tickCount - button->pressTime > LONG_PRESS_MS) {
 				button->btState=BUTTON_STATE_LONG_PRESS;
-
 			}
 			else if (button->waitToSecondPress) {
+				MainTimer_unRegister(Button_timerInterrupt, button);
 				button->btState=BUTTON_STATE_DOUBLE_PRESS;
 				button->waitToSecondPress=0;
 			}
 			else  {
-
+				MainTimer_registerCallback(Button_timerInterrupt, button);
 				button->waitToSecondPress = 1;
-
 			}
-
 
 		}
 
 	}
 }
 
-void Button_timerInterrupt(Button* bt)
+void Button_timerInterrupt(void* obj)
 {
-	if(bt->waitToSecondPress){
-		bt->counter++;
-		if(bt->counter>300){
-			bt->btState=BUTTON_STATE_PRESS;
-			bt->waitToSecondPress=0;
+	Button* button=(Button*)obj;
+	if(button->waitToSecondPress){
+		button->counter++;
+		if(button->counter>300){
+			MainTimer_unRegister(Button_timerInterrupt, button);
+			button->btState=BUTTON_STATE_PRESS;
+			button->waitToSecondPress=0;
 		}
 	}
 }

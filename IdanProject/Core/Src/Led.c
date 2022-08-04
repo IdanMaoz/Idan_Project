@@ -6,7 +6,7 @@
  */
 
 #include "Led.h"
-
+#include "MainTimer.h"
 #define MAX_BRIGHNESS_LEVEL 10
 
 void Led_init(Led* led, GPIO_TypeDef* gpioPort, uint16_t gpioPin)
@@ -18,6 +18,7 @@ void Led_init(Led* led, GPIO_TypeDef* gpioPort, uint16_t gpioPin)
 
 void Led_On(Led* led)
 {
+	MainTimer_unRegister(Led_OnTimerInterrupt, led);
 	led->state = STATE_FULL;
 	HAL_GPIO_WritePin(led->gpioPort, led->gpioPin, 1);
 
@@ -26,12 +27,14 @@ void Led_On(Led* led)
 
 void Led_Off(Led* led)
 {
+	MainTimer_unRegister(Led_OnTimerInterrupt, led);
 	led->state = STATE_OFF;
 	HAL_GPIO_WritePin(led->gpioPort, led->gpioPin, 0);
 }
 
 void Led_Blink(Led* led, int period)
 {
+	MainTimer_registerCallback(Led_OnTimerInterrupt, led);
 	led->state = STATE_BLINK;
 	led->counter = 0;
 	led->maxCounter = period;
@@ -46,12 +49,11 @@ void Led_Brightness(Led* led ,int level)
 	led->state = STATE_BRIGHTNESS;
 	led->counter=0;
 	led->maxCounter=level;
-
-
 }
 
-void Led_OnTimerInterrupt(Led* led)
+void Led_OnTimerInterrupt(void* obj)
 {
+	Led* led=(Led*)obj;
 	if (led->state == STATE_BLINK) {
 		led->counter++;
 		if (led->counter == led->maxCounter) {

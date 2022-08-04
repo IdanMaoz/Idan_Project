@@ -5,8 +5,8 @@
  *      Author: student
  */
 
+#include "Cli.h"
 #include "Communication.h"
-#include "CLI.h"
 #include "MyMain.h"
 #include "Led.h"
 #include "Button.h"
@@ -41,13 +41,14 @@ static void cmdLedBrightness(void* obj, char* params)
 
 static void cmdBuzzerStart(void* obj, char* params)
 {
-
-	Buzzer_start();
+	Buzzer* buzzer=(Buzzer*)obj;
+	Buzzer_start(buzzer);
 
 }
 static void cmdBuzzerStop(void* obj, char* params)
 {
-	Buzzer_stop();
+	Buzzer* buzzer=(Buzzer*)obj;
+	Buzzer_stop(buzzer);
 }
 
 
@@ -61,6 +62,7 @@ void Cli_init(){
 	Communication_register("redOff", &cmdLedOff, &ledR);
 	Communication_register("redBlink", &cmdLedBlink, &ledR);
 	Communication_register("redBrightness", &cmdLedBrightness, &ledR);
+
 	Communication_register("buzzerStart", &cmdBuzzerStart, &bz1);
 	Communication_register("buzzerStop", &cmdBuzzerStop, &bz1);
 }

@@ -51,7 +51,7 @@ ButtonState Button_getState();
 
 void Button_changeStateToNone(Button *bt);
 
-void Button_timerInterrupt(Button* bt);
+void Button_timerInterrupt(void* obj);
 
 
 void Button_resetCounter(Button* bt);

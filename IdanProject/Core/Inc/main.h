@@ -80,6 +80,9 @@ void Error_Handler(void);
 #define SW2_Pin GPIO_PIN_3
 #define SW2_GPIO_Port GPIOB
 #define SW2_EXTI_IRQn EXTI3_IRQn
+#define DHT11_Pin GPIO_PIN_5
+#define DHT11_GPIO_Port GPIOB
+#define DHT11_EXTI_IRQn EXTI9_5_IRQn
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
