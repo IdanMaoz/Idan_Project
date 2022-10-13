@@ -11,9 +11,12 @@
 #include "main.h"
 #include "Dht.h"
 #include "Button.h"
+#include "Flash.h"
+#include <stdio.h>
+
 #define MAX_COMMANDS 50
 extern TIM_HandleTypeDef htim6;
-
+extern Flash flash;
 typedef struct Command_
 {
 
@@ -51,26 +54,11 @@ static Command _commandsArr[MAX_COMMANDS];
  void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
  {
  	if(htim==&htim6){
-
-
- 		/*Led_OnTimerInterrupt(&ledB);
- 		Led_OnTimerInterrupt(&ledR);
-
- 		Buzzer_interrupt(&bz1);
-
- 		myClock.tickCount++;
- 		Button_timerInterrupt(&buttonSw1);
- 		Button_timerInterrupt(&buttonSw2);
- 		Dht_onTimerInterrupt(&dht);*/
-
  		for(int i=0;i<_lenArr;i++){
+
  			_commandsArr[i].func(_commandsArr[i].object);
  		}
  		myClock.tickCount++;
+ 		Flash_timerInterrupt(&flash);
  	}
  }
-
-
-
-
-

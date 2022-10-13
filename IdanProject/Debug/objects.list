@@ -4,6 +4,7 @@
 "./Core/Src/Clock.o"
 "./Core/Src/Communication.o"
 "./Core/Src/Dht.o"
+"./Core/Src/Flash.o"
 "./Core/Src/Led.o"
 "./Core/Src/LedState.o"
 "./Core/Src/LightSensor.o"

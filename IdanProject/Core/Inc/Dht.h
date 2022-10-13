@@ -36,5 +36,9 @@ void Dht_onGpioInterrupt(Dht* dht,uint32_t pin);
 void Dht_onTimerInterrupt(void* obj);
 int Dht_hasData(Dht* dht);
 void Dht_changeStateToResStart(Dht* dht);
+double Dht_getTemperature(Dht* dht);
+double Dht_getHumidity(Dht* dht);
+int Dht_getSum(Dht* dht);
+
 
 #endif /* INC_DHT_H_ */

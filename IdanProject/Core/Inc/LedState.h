@@ -20,5 +20,5 @@ typedef enum LedState_
 // Cyclically changes the flash light state to the next state
 LedState Led_changeState();
 LedState Led_getState();
-void Led_setState(LedState newState);
+void Led_setDelay(LedState newState);
 #endif /* INC_LEDSTATE_H_ */

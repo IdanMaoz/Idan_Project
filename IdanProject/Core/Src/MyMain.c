@@ -13,6 +13,7 @@
 #include "LightSensor.h"
 #include "Dht.h"
 #include "MainTimer.h"
+#include "Flash.h"
 
 extern TIM_HandleTypeDef htim6;
 extern  TIM_HandleTypeDef htim3;
@@ -26,12 +27,13 @@ Button buttonSw2;
 
 Buzzer bz1;
 
-
+FlashData flashData;
 LightSensor lts1;
 
 Dht dht;
 
-
+FLASH_EraseInitTypeDef pEraseInit;
+Flash flash;
 
 void MyMain(){
 	Led_init(&ledB, LED1_GPIO_Port, LED1_Pin);
@@ -48,7 +50,7 @@ void MyMain(){
 	Buzzer_init(&bz1);
 
 	HAL_NVIC_EnableIRQ(TIM6_DAC_IRQn);
-	HAL_TIM_Base_Start_IT(&htim6);
+
 
 
 	HAL_NVIC_EnableIRQ(ADC1_2_IRQn);
@@ -63,11 +65,19 @@ void MyMain(){
 	Dht_init(&dht, DHT11_GPIO_Port,  DHT11_Pin);
 	Dht_readAsync(&dht);
 
+	HAL_NVIC_EnableIRQ(FLASH_IRQn);
+
+
+	//static char data[24] = "interrupt flash!!";
+	//Flash_write((0x08080000), data, 24);
+	Flash_init(&flash);
+
+	HAL_TIM_Base_Start_IT(&htim6);
 	while(1){
 		if(Dht_hasData(&dht)){
-			printf("The humidity is: %.2lf\r\n",dht.humidity);
-			printf("The temperature is: %.2lf\r\n",dht.temperature);
-			printf("The sum is: %d\r\n",dht.sum);
+			printf("The humidity is: %.2lf\r\n",Dht_getHumidity(&dht));
+			printf("The temperature is: %.2lf\r\n",Dht_getTemperature(&dht));
+			printf("The sum is: %d\r\n",Dht_getSum(&dht));
 			Dht_changeStateToResStart(&dht);
 
 		}
@@ -75,6 +85,8 @@ void MyMain(){
 		{
 			Communication_handle();
 		}
+
+
 
 		SW1State=Button_getState(&buttonSw1);
 
@@ -135,8 +147,11 @@ void MyMain(){
 				break;
 			case BUTTON_STATE_NONE:
 				break;
+
 			}
+
 		}
+
 	}
 
 }

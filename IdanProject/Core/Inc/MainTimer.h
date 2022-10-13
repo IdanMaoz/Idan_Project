@@ -12,5 +12,4 @@ typedef void (*MainTimerFunc)(void*);
 void MainTimer_registerCallback(MainTimerFunc func,void* object);
 void MainTimer_unRegister(MainTimerFunc func,void* object);
 
-
 #endif /* INC_MAINTIMER_H_ */

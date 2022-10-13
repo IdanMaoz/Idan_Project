@@ -18,7 +18,7 @@
 extern UART_HandleTypeDef huart2;
 
 #define MAX_BUFFER_LENGTH 100
-#define MAX_COMMANDS 10
+#define MAX_COMMANDS 20
 
 static uint8_t _cmdbuffer[MAX_BUFFER_LENGTH];
 static int _cmdcount = 0;
@@ -123,6 +123,7 @@ static int _CommandArrLen=0;
 
 void Communication_register(char* commandName, HandlerFunc func,void* object)
 {
+
 	strncpy(_commandsArr[_CommandArrLen].commandName, commandName, 20);
 	_commandsArr[_CommandArrLen].func=func;
 	_commandsArr[_CommandArrLen].object=object;

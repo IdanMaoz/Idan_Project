@@ -11,7 +11,8 @@
 #include "Led.h"
 #include "Button.h"
 #include "Buzzer.h"
-
+#include "Dht.h"
+#include "Flash.h"
 #include <stdlib.h>
 
 static void cmdLedOn(void* obj, char* params)
@@ -50,7 +51,11 @@ static void cmdBuzzerStop(void* obj, char* params)
 	Buzzer* buzzer=(Buzzer*)obj;
 	Buzzer_stop(buzzer);
 }
-
+static void cmdPrintFlash(void* obj, char* params)
+{
+	Flash* flash = (Flash*)obj;
+	Flash_print(flash);
+}
 
 void Cli_init(){
 	Communication_register("blueOn", &cmdLedOn, &ledB);
@@ -65,4 +70,6 @@ void Cli_init(){
 
 	Communication_register("buzzerStart", &cmdBuzzerStart, &bz1);
 	Communication_register("buzzerStop", &cmdBuzzerStop, &bz1);
+	Communication_register("printFlash", &cmdPrintFlash, &flash);
+
 }

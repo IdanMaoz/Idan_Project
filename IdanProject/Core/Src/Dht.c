@@ -85,7 +85,7 @@ void Dht_onTimerInterrupt(void* obj)
 		gpioInitStruct.Pull = GPIO_PULLUP;
 		gpioInitStruct.Mode = GPIO_MODE_IT_FALLING;
 		HAL_GPIO_Init(dht->gpioPort, &gpioInitStruct);
-		//MainTimer_unRegister(Dht_onTimerInterrupt, dht);
+		MainTimer_unRegister(Dht_onTimerInterrupt, dht);
 		_startCount=0;
 		dht->dhtState = DHT_STATE_AWAITING_RESPONSE_START;
 	}
@@ -93,7 +93,7 @@ void Dht_onTimerInterrupt(void* obj)
 
 void Dht_readAsync(Dht* dht)
 {
-	//MainTimer_registerCallback(Dht_onTimerInterrupt, dht);
+	MainTimer_registerCallback(Dht_onTimerInterrupt, dht);
 	GPIO_InitTypeDef gpioInitStruct;
 
 	gpioInitStruct.Pin = dht->gpioPin;
@@ -110,15 +110,32 @@ void Dht_readAsync(Dht* dht)
 
 }
 
-int Dht_hasData(Dht* dht){
+int Dht_hasData(Dht* dht)
+{
 	if(dht->dhtState==DHT_STATE_DATA_RECIVED){
 		return 1;
 	}
 	return 0;
 }
 
-void Dht_changeStateToResStart(Dht* dht){
+void Dht_changeStateToResStart(Dht* dht)
+{
 	dht->dhtState=DHT_STATE_AWAITING_RESPONSE_START;
+}
+double Dht_getTemperature(Dht* dht)
+{
+	return dht->temperature;
+
+}
+double Dht_getHumidity(Dht* dht)
+{
+	return dht->humidity;
+
+}
+int Dht_getSum(Dht* dht)
+{
+	return dht->sum;
+
 }
 
 

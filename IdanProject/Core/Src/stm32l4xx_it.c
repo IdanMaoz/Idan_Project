@@ -23,7 +23,8 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 /* USER CODE END Includes */
-
+#include "Flash.h"
+#include "MyMain.h"
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN TD */
 
@@ -59,7 +60,6 @@ extern ADC_HandleTypeDef hadc2;
 extern TIM_HandleTypeDef htim3;
 extern TIM_HandleTypeDef htim6;
 /* USER CODE BEGIN EV */
-
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -201,6 +201,20 @@ void SysTick_Handler(void)
 /******************************************************************************/
 
 /**
+  * @brief This function handles Flash global interrupt.
+  */
+void FLASH_IRQHandler(void)
+{
+  /* USER CODE BEGIN FLASH_IRQn 0 */
+
+  /* USER CODE END FLASH_IRQn 0 */
+  HAL_FLASH_IRQHandler();
+  /* USER CODE BEGIN FLASH_IRQn 1 */
+  	 Flash_myInterruptHandler(&flash);
+  /* USER CODE END FLASH_IRQn 1 */
+}
+
+/**
   * @brief This function handles EXTI line3 interrupt.
   */
 void EXTI3_IRQHandler(void)
@@ -231,11 +245,9 @@ void ADC1_2_IRQHandler(void)
 /**
   * @brief This function handles EXTI line[9:5] interrupts.
   */
-int xxx = 0;
 void EXTI9_5_IRQHandler(void)
 {
   /* USER CODE BEGIN EXTI9_5_IRQn 0 */
-	xxx++;
   /* USER CODE END EXTI9_5_IRQn 0 */
   HAL_GPIO_EXTI_IRQHandler(DHT11_Pin);
   /* USER CODE BEGIN EXTI9_5_IRQn 1 */

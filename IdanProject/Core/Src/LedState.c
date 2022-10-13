@@ -46,7 +46,7 @@ LedState  Led_getState()
 	return _currentState;
 }
 
-void Led_setState(LedState  newState)
+void Led_setDelay(LedState  newState)
 {
 	_currentState = newState;
 }
