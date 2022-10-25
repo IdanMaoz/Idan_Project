@@ -14,6 +14,7 @@ typedef struct Alarm_
 {
 	char name[maxNameSize];
 	DateTime dateTime;
+	uint32_t isFull;
 } Alarm;
 
 
@@ -22,4 +23,5 @@ void Alarm_print();
 void Alarm_delete(char * name);
 void Alarm_clearAll();
 void Alarm_edit(char * name,DateTime dateTime);
+void Alarm_flashToAlarms();
 #endif /* INC_ALARM_H_ */

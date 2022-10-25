@@ -21,7 +21,7 @@ void MyMain()
 	printf("----------Commands List----------\r\n");
 	printf("1.Command \033[33mlist \033[0m to print all existing alarms.\r\n");
 	printf("2.Command \033[33mdate hours:min:sec-weekDay-day/month/year\033[0m to sets the current date.\r\n");
-	printf("3.Command \033[33mAdd alarmName hours:min:sec-weekDay-day/month/year\033[0m to add a new alarm.\r\n");
+	printf("3.Command \033[33madd alarmName hours:min:sec-weekDay-day/month/year\033[0m to add a new alarm.\r\n");
 	printf("4.Command \033[33mdel alarmName\033[0m to delete current alarm.\r\n");
 	printf("5.Command \033[33mstop alarmName\033[0m to stop current alarm.\r\n");
 	printf("6.Command \033[33msnooze alarmName\033[0m to snooze current alarm.\r\n");
@@ -31,7 +31,7 @@ void MyMain()
 	printf("---------------------------------\r\n");
 
 
-
+	Alarm_flashToAlarms();
 	Cli_init();
 	Rtc_init(&rtc1, &hi2c1, 0xD0);
 	Rtc_setTime(&rtc1);
