@@ -8,7 +8,7 @@
 #ifndef INC_COMMUNICATION_H_
 #define INC_COMMUNICATION_H_
 
-typedef void (*HandlerFunc)(void*, char *);
+typedef void (*HandlerFunc)(void*, char *,char *);
 
 
 void Communication_register(char* commandName, HandlerFunc func, void* object);

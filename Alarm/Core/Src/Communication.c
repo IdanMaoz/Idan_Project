@@ -101,9 +101,10 @@ static int _CommandArrLen=0;
  void handle()
 {
 	char cmd[20];
+	char name[20];
 	char param[20];
 
-	int params = sscanf((const char*)_cmdbuffer, "%s %s", cmd, param);
+	int params = sscanf((const char*)_cmdbuffer, "%s %s %s", cmd, name,param);
 
 	if (params == 0)
 	{
@@ -111,7 +112,7 @@ static int _CommandArrLen=0;
 	}
 	for(int i=0;i<_CommandArrLen;i++){
 		if(strcmp(cmd,_commandsArr[i].commandName) == 0){
-			_commandsArr[i].func(_commandsArr[i].object, param);
+			_commandsArr[i].func(_commandsArr[i].object, name,param);
 			return;
 		}
 

@@ -28,6 +28,12 @@ void Buzzer_changeToOn(Buzzer * buzzer)
 	buzzer->bzState=BUZZER_STATE_ON;
 
 }
+void Buzzer_changeToOff(Buzzer * buzzer)
+{
+	HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_1);
+	buzzer->bzState=BUZZER_STATE_OFF;
+
+}
 void Buzzer_playTask(void* argument)
 {
 	Buzzer* buzzer = (Buzzer*)argument;
