@@ -11,6 +11,7 @@
 #include "Cli.h"
 #include "Buzzer.h"
 #include "Rtc.h"
+#include "Alarm.h"
 #include <stdio.h>
 
 extern I2C_HandleTypeDef hi2c1;

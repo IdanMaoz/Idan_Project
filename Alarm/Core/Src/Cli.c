@@ -139,7 +139,10 @@ static void cmdEditAlarm(void* obj, char* name,char* params)
 	timeStrTok(params, &dateTime);
 	Alarm_edit(name, dateTime);
 }
+static void cmdMelody(void* obj, char* name,char* params)
+{
 
+}
 
 void Cli_init(){
 	Communication_register("getSeconds", &cmdGetSeconds,&rtc1);
@@ -150,6 +153,7 @@ void Cli_init(){
 	Communication_register("stop", &cmdStopAlarm,"");
 	Communication_register("clearall", &cmdClearAllAlarms,"");
 	Communication_register("edit", &cmdEditAlarm,"");
+	Communication_register("melody", &cmdMelody,"");
 	/*Communication_register("blueOn", &cmdLedOn, &ledB);
 	Communication_register("blueOff", &cmdLedOff, &ledB);
 	Communication_register("blueBlink", &cmdLedBlink, &ledB);
