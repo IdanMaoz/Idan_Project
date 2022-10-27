@@ -9,8 +9,9 @@
 #include "Rtc.h"
 #include "Buzzer.h"
 #include "MyMain.h"
+#include "Flash.h"
 #include <string.h>
-#include "stdio.h"
+#include <stdio.h>
 #include "cmsis_os.h"
 #define maxAlarms 10
 
@@ -26,6 +27,12 @@ void Alarm_add(char * name,DateTime dateTime)
 	alarm.dateTime = dateTime;
 	alarms[alarmsLen] = alarm;
 	alarmsLen++;
+
+	uint64_t* byteAlarms = (uint64_t*)(alarms);
+	HAL_FLASH_Unlock();
+	Flash_erase();
+	Flash_program(byteAlarms, sizeof(alarms));
+	HAL_FLASH_Lock();
 	/*printf("%02d:%02d:%02d-%d-%02d/%02d/%02d\r\n",
 					alarm.dateTime.hours, alarm.dateTime.min, alarm.dateTime.sec,
 					alarm.dateTime.weekDay,
@@ -37,7 +44,14 @@ void Alarm_delete(char * name)
 	for(int i=0;i<alarmsLen;i++){
 		if(!strcmp(name,alarms[i].name)){
 			alarms[i]=alarms[alarmsLen-1];
+			alarms[alarmsLen-1].isActive = 0;
 			alarmsLen--;
+
+			uint64_t* byteAlarms = (uint64_t*)(alarms);
+			HAL_FLASH_Unlock();
+			Flash_erase();
+			Flash_program(byteAlarms, sizeof(alarms));
+			HAL_FLASH_Lock();
 		}
 	}
 
@@ -50,8 +64,15 @@ void Alarm_stop(char * name)//ask what they mean
 
 void Alarm_clearAll()
 {
+	for(int i=0;i<alarmsLen;i++){
+		alarms[i].isActive = 0;
+	}
 	alarmsLen = 0;
-
+	uint64_t* byteAlarms = (uint64_t*)(alarms);
+	HAL_FLASH_Unlock();
+	Flash_erase();
+	Flash_program(byteAlarms, sizeof(alarms));
+	HAL_FLASH_Lock();
 }
 
 void Alarm_edit(char * name,DateTime dateTime)
@@ -88,3 +109,20 @@ void Alarm_print(){
 					alarms[i].dateTime.year);
 	}
 }
+
+void Alarm_flashToAlarms()
+{
+	for (int i = 0 ; i<sizeof(alarms)/sizeof(Alarm); i++)
+	{
+		Alarm* alarm = (Alarm*)(0x08080000+(i*sizeof(Alarm)));
+		if(alarm->isActive != 0){  //ask about this
+			alarmsLen++;
+		}
+		alarms[i] = *alarm;
+	}
+}
+
+
+
+
+

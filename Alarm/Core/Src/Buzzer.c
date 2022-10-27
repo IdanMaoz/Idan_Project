@@ -54,14 +54,7 @@ void Buzzer_playTask(void* argument)
 			else{
 				_index++;
 			}
-
-
-
 		}
 			osDelay(1000/_lengths[_index]);
 	}
-
-
-
-
 }

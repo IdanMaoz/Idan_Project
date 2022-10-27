@@ -167,6 +167,5 @@ void Cli_init(){
 
 	Communication_register("buzzerStop", &cmdBuzzerStop, &bz1);
 	Communication_register("printFlash", &cmdPrintFlash, &flash);*/
-
 }
 

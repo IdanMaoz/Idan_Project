@@ -14,7 +14,7 @@ typedef struct Alarm_
 {
 	char name[maxNameSize];
 	DateTime dateTime;
-	uint32_t isFull;
+	uint32_t isActive;
 } Alarm;
 
 
