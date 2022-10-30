@@ -74,6 +74,20 @@ const osThreadAttr_t alarmTask_attributes = {
   .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
+/* Definitions for blinkTaskRed */
+osThreadId_t blinkTaskRedHandle;
+const osThreadAttr_t blinkTaskRed_attributes = {
+  .name = "blinkTaskRed",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityLow,
+};
+/* Definitions for blinkTaskBlue */
+osThreadId_t blinkTaskBlueHandle;
+const osThreadAttr_t blinkTaskBlue_attributes = {
+  .name = "blinkTaskBlue",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityLow,
+};
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -88,6 +102,7 @@ void Default(void *argument);
 extern void Buzzer_playTask(void *argument);
 extern void Communication_handleTask(void *argument);
 extern void Alarm_startTask(void *argument);
+extern void Led_blinkTask(void *argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -163,7 +178,13 @@ int main(void)
   comTaskHandle = osThreadNew(Communication_handleTask, NULL, &comTask_attributes);
 
   /* creation of alarmTask */
-  alarmTaskHandle = osThreadNew(Alarm_startTask, (void*) &rtc1, &alarmTask_attributes);//ask if it is good
+  alarmTaskHandle = osThreadNew(Alarm_startTask, (void*) &rtc1, &alarmTask_attributes);
+
+  /* creation of blinkTaskRed */
+  blinkTaskRedHandle = osThreadNew(Led_blinkTask, (void*) &ledR, &blinkTaskRed_attributes);
+
+  /* creation of blinkTaskBlue */
+  blinkTaskBlueHandle = osThreadNew(Led_blinkTask, (void*) &ledB, &blinkTaskBlue_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */

@@ -34,6 +34,11 @@ void Buzzer_changeToOff(Buzzer * buzzer)
 	buzzer->bzState=BUZZER_STATE_OFF;
 
 }
+BuzzerState Buzzer_getState(Buzzer * buzzer)
+{
+	return buzzer->bzState;
+
+}
 void Buzzer_playTask(void* argument)
 {
 	Buzzer* buzzer = (Buzzer*)argument;

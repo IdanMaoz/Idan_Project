@@ -54,4 +54,5 @@ void Buzzer_init(Buzzer * buzzer);
 void Buzzer_changeToOn(Buzzer * buzzer);
 void Buzzer_changeToOff(Buzzer * buzzer);
 void Buzzer_start(Buzzer * buzzer);
+BuzzerState Buzzer_getState(Buzzer * buzzer);
 #endif /* INC_BUZZER_H_ */

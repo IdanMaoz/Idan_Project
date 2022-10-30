@@ -10,6 +10,7 @@
 #include "Buzzer.h"
 #include "MyMain.h"
 #include "Flash.h"
+#include "Led.h"
 #include <string.h>
 #include <stdio.h>
 #include "cmsis_os.h"
@@ -91,10 +92,17 @@ void Alarm_startTask(void* argument)
 		if(alarmsLen!=0){
 			for(int i=0;i<alarmsLen;i++){
 				if(Rtc_convertToSec(&alarms[i].dateTime) == Rtc_getSeconds(rtc)){
-						Buzzer_changeToOn(&bz1);//ask if it is good
-						printf("Alarm %s turned on\r\n",alarms[i].name);
-					}
+					Buzzer_changeToOn(&bz1);//ask if it is good
+					Led_changeToBlink(&ledR);
+					Led_changeToBlink(&ledB);
+					printf("Alarm %s turned on\r\n",alarms[i].name);
 				}
+				if(Buzzer_getState(&bz1) == BUZZER_STATE_OFF){
+					Led_changeToOff(&ledB);
+					Led_changeToOff(&ledR);
+				}
+
+			}
 		}
 		osDelay(1000);
 	}

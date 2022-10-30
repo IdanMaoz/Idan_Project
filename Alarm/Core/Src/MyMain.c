@@ -12,11 +12,14 @@
 #include "Buzzer.h"
 #include "Rtc.h"
 #include "Alarm.h"
+#include "Led.h"
 #include <stdio.h>
 
 extern I2C_HandleTypeDef hi2c1;
 Buzzer bz1;
 Rtc rtc1;
+Led ledR;
+Led ledB;
 void MyMain()
 {
 	printf("----------Commands List----------\r\n");
@@ -37,6 +40,8 @@ void MyMain()
 	Rtc_init(&rtc1, &hi2c1, 0xD0);
 	Rtc_setTime(&rtc1);
 	Buzzer_init(&bz1);
+	Led_init(&ledR, LED2_GPIO_Port, LED2_Pin,50);
+	Led_init(&ledB, LED1_GPIO_Port, LED1_Pin,300);
 
 
 }
