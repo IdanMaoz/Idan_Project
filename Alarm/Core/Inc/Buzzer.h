@@ -50,9 +50,13 @@ enum Note_
 
 
 };
+
+
 void Buzzer_init(Buzzer * buzzer);
 void Buzzer_changeToOn(Buzzer * buzzer);
 void Buzzer_changeToOff(Buzzer * buzzer);
 void Buzzer_start(Buzzer * buzzer);
 BuzzerState Buzzer_getState(Buzzer * buzzer);
+void Buzzer_changeMelody(Buzzer* buzzer,char* name);
+void Buzzer_printMelodies();
 #endif /* INC_BUZZER_H_ */

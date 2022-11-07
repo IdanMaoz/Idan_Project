@@ -15,13 +15,16 @@ typedef struct Alarm_
 	char name[maxNameSize];
 	DateTime dateTime;
 	uint32_t isActive;
+	char melodyName[maxNameSize];
 } Alarm;
 
 
-void Alarm_add(char * name,DateTime dateTime);
+int Alarm_add(char * name,DateTime dateTime);
 void Alarm_print();
-void Alarm_delete(char * name);
+int Alarm_delete(char * name);
 void Alarm_clearAll();
+void Alarm_stop(char * name);
 void Alarm_edit(char * name,DateTime dateTime);
+int Alarm_changeMelody(char * name,char* melody);
 void Alarm_flashToAlarms();
 #endif /* INC_ALARM_H_ */

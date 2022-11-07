@@ -14,84 +14,72 @@
 #include <stdlib.h>
 #include <string.h>
 #include "stdio.h"
-/*static void cmdLedOn(void* obj, char* params)
+static int checkToken(char* token,int low,int high)
 {
-	(void)params;
-	Led* led = (Led*)obj;
-	Led_On(led);
-
-}
-static void cmdLedOff(void* obj, char* params)
-{
-	(void)params;
-	Led* led = (Led*)obj;
-	Led_Off(led);
-}
-
-static void cmdLedBlink(void* obj, char* params)
-{
-	Led* led = (Led*)obj;
-	Led_Blink(led, atoi(params));
-}
-static void cmdLedBrightness(void* obj, char* params)
-{
-	Led* led = (Led*)obj;
-	Led_Brightness(led, atoi(params));
-}
-
-
-static void cmdBuzzerStop(void* obj, char* params)
-{
-	Buzzer* buzzer=(Buzzer*)obj;
-	Buzzer_stop(buzzer);
-}
-static void cmdPrintFlash(void* obj, char* params)
-{
-	Flash* flash = (Flash*)obj;
-	Flash_print(flash);
-}*/
-
-static void timeStrTok(char * params,DateTime* dateTime)
-{
-	uint16_t count = 0;
-	char* token = strtok(params, ":");
-
-	while( token != NULL ) {
-		switch(count){
-		case 0:
-			dateTime->hours = atoi(token);
-			token = strtok(NULL, ":");
-			break;
-		case 1:
-			dateTime->min = atoi(token);
-			token = strtok(NULL, "-");
-			break;
-
-		case 2:
-			dateTime->sec = atoi(token);
-			token = strtok(NULL, "-");
-			break;
-		case 3:
-			dateTime->weekDay = atoi(token);
-			token = strtok(NULL, "/");
-			break;
-		case 4:
-			dateTime->day = atoi(token);
-			token = strtok(NULL, "/");
-			break;
-		case 5:
-			dateTime->month = atoi(token);
-			token = strtok(NULL, "/");
-			break;
-		case 6:
-			dateTime->year = atoi(token);
-			token = strtok(NULL, "/");
-			break;
-		}
-		count++;
+	int tokInt = atoi(token);
+	if(tokInt < low || tokInt > high){
+		return 0;
 	}
+	return 1;
+}
+static int timeStrTok(char * params,DateTime* dateTime)
+{
+	char* token;
+	token = strtok(params, ":");
+	if(!checkToken(token,0,59)){
+		return 0;
+	}
+	dateTime->hours = atoi(token);
+	token = strtok(NULL, ":");
+	if(!checkToken(token,0,59)){
+		return 0;
+	}
+	dateTime->min = atoi(token);
+	token = strtok(NULL, "-");
+	if(!checkToken(token,0,59)){
+		return 0;
+	}
+	dateTime->sec = atoi(token);
+	token = strtok(NULL, "-");
+	if(!checkToken(token,0,7)){
+		return 0;
+	}
+	dateTime->weekDay = atoi(token);
+	token = strtok(NULL, "/");
+	if(!checkToken(token,1,31)){
+		return 0;
+	}
+	dateTime->day = atoi(token);
+	token = strtok(NULL, "/");
+	if(!checkToken(token,1,12)){
+		return 0;
+	}
+	dateTime->month = atoi(token);
+	token = strtok(NULL, "/");
+	if(!checkToken(token,1,99)){
+		return 0;
+	}
+	dateTime->year = atoi(token);
+	token = strtok(NULL, "/");
+	if(token!=NULL){
+		return 0;
+	}
+	return 1;
 }
 
+static int paramStrTok(char * params)
+{
+	 char * token = strtok(params, "0123456789");
+	 if(!strcmp(token,"melody")){
+		 return 1;
+	 }
+	 else if(!strcmp(token,"rep")){
+		 return 2;
+	 }
+	 else{
+		 return 0;
+	 }
+}
 
 
 static void cmdGetSeconds(void* obj, char* name,char* params)
@@ -113,20 +101,25 @@ static void cmdSetDate(void* obj, char* name,char* params)
 
 static void cmdAddAlarm(void* obj, char* name,char* params)
 {
-
-	DateTime dateTime;
-	timeStrTok(params,&dateTime);
-	Alarm_add(name, dateTime);
+		DateTime dateTime;
+		if(!timeStrTok(params,&dateTime)){
+			printf("Incorrect time\r\n");
+		}
+		else if(!Alarm_add(name, dateTime)){
+			printf("Alarm name already exists\r\n");
+		}
 }
 static void cmdDelAlarm(void* obj, char* name,char* params)
 {
 
-	Alarm_delete(name);
+	if(!Alarm_delete(name)){
+		printf("Alarm name didn't eexists\r\n");
+	}
 
 }
 static void cmdStopAlarm(void* obj, char* name,char* params)
 {
-
+	Alarm_stop(name);
 }
 static void cmdClearAllAlarms(void* obj, char* name,char* params)
 {
@@ -135,15 +128,32 @@ static void cmdClearAllAlarms(void* obj, char* name,char* params)
 
 static void cmdEditAlarm(void* obj, char* name,char* params)
 {
-	DateTime dateTime;
-	timeStrTok(params, &dateTime);
-	Alarm_edit(name, dateTime);
+	char copy[20];
+	strcpy(copy,params);
+	int num = paramStrTok(copy);
+	if(num == 1){
+		if(!Alarm_changeMelody(name, params)){
+			printf("Alarm name didn't exists\r\n");
+		}
+	}
+	else if(num == 2){
+		printf("it is rep\r\n");
+	}
+	else{
+		DateTime dateTime;
+		if(!timeStrTok(params, &dateTime)){
+			printf("Incorrect time\r\n");
+		}
+		else{
+			Alarm_edit(name, dateTime);
+		}
+	}
 }
-static void cmdMelody(void* obj, char* name,char* params)
+
+void cmdListMelody(void* obj, char* name,char* params)
 {
-
+	Buzzer_printMelodies();
 }
-
 void Cli_init(){
 	Communication_register("getSeconds", &cmdGetSeconds,&rtc1);
 	Communication_register("list", &cmdListAlarms, "");
@@ -153,19 +163,6 @@ void Cli_init(){
 	Communication_register("stop", &cmdStopAlarm,"");
 	Communication_register("clearall", &cmdClearAllAlarms,"");
 	Communication_register("edit", &cmdEditAlarm,"");
-	Communication_register("melody", &cmdMelody,"");
-	/*Communication_register("blueOn", &cmdLedOn, &ledB);
-	Communication_register("blueOff", &cmdLedOff, &ledB);
-	Communication_register("blueBlink", &cmdLedBlink, &ledB);
-	Communication_register("blueBrightness", &cmdLedBrightness, &ledB);
-
-	Communication_register("redOn", &cmdLedOn, &ledR);
-	Communication_register("redOff", &cmdLedOff, &ledR);
-	Communication_register("redBlink", &cmdLedBlink, &ledR);
-	Communication_register("redBrightness", &cmdLedBrightness, &ledR);
-
-
-	Communication_register("buzzerStop", &cmdBuzzerStop, &bz1);
-	Communication_register("printFlash", &cmdPrintFlash, &flash);*/
+	Communication_register("melody", &cmdListMelody,"");
 }
 

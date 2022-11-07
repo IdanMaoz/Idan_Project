@@ -71,7 +71,7 @@ const osThreadAttr_t comTask_attributes = {
 osThreadId_t alarmTaskHandle;
 const osThreadAttr_t alarmTask_attributes = {
   .name = "alarmTask",
-  .stack_size = 256 * 4,
+  .stack_size = 384 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
 /* Definitions for blinkTaskRed */
@@ -86,6 +86,20 @@ osThreadId_t blinkTaskBlueHandle;
 const osThreadAttr_t blinkTaskBlue_attributes = {
   .name = "blinkTaskBlue",
   .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityLow,
+};
+/* Definitions for buttonTask1 */
+osThreadId_t buttonTask1Handle;
+const osThreadAttr_t buttonTask1_attributes = {
+  .name = "buttonTask1",
+  .stack_size = 256 * 4,
+  .priority = (osPriority_t) osPriorityLow,
+};
+/* Definitions for buttonTask2 */
+osThreadId_t buttonTask2Handle;
+const osThreadAttr_t buttonTask2_attributes = {
+  .name = "buttonTask2",
+  .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
 /* USER CODE BEGIN PV */
@@ -103,6 +117,7 @@ extern void Buzzer_playTask(void *argument);
 extern void Communication_handleTask(void *argument);
 extern void Alarm_startTask(void *argument);
 extern void Led_blinkTask(void *argument);
+extern void Button_pressTask(void *argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -185,6 +200,12 @@ int main(void)
 
   /* creation of blinkTaskBlue */
   blinkTaskBlueHandle = osThreadNew(Led_blinkTask, (void*) &ledB, &blinkTaskBlue_attributes);
+
+  /* creation of buttonTask1 */
+  buttonTask1Handle = osThreadNew(Button_pressTask, (void*) &btn1, &buttonTask1_attributes);
+
+  /* creation of buttonTask2 */
+  buttonTask2Handle = osThreadNew(Button_pressTask, (void*) &btn2, &buttonTask2_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -420,6 +441,18 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : SW1_Pin */
+  GPIO_InitStruct.Pin = SW1_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(SW1_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : SW2_Pin */
+  GPIO_InitStruct.Pin = SW2_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(SW2_GPIO_Port, &GPIO_InitStruct);
 
 }
 
