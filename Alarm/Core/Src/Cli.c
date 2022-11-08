@@ -154,6 +154,7 @@ void cmdListMelody(void* obj, char* name,char* params)
 {
 	Buzzer_printMelodies();
 }
+
 void Cli_init(){
 	Communication_register("getSeconds", &cmdGetSeconds,&rtc1);
 	Communication_register("list", &cmdListAlarms, "");

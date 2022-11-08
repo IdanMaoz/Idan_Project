@@ -16,6 +16,7 @@ typedef struct Alarm_
 	DateTime dateTime;
 	uint32_t isActive;
 	char melodyName[maxNameSize];
+	uint32_t countSnooze;
 } Alarm;
 
 

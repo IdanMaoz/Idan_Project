@@ -119,8 +119,8 @@ void Rtc_setTime(Rtc * rtc)
 
 	buffer[0] = intToBcd(0, 0, 59);
 	buffer[1] = intToBcd(0, 0, 59);
-	buffer[2] = intToBcd(0, 0, 59);
-	buffer[3] = 0 < 1 || 0 > 7 ? 0 : 0;
+	buffer[2] = intToBcd(0, 0, 24);
+	buffer[3] = 0 < 1 || 0 > 7 ? 0 : 1;
 	buffer[4] = intToBcd(1, 1, 31);
 	buffer[5] = intToBcd(1, 1, 12);
 	buffer[6] = intToBcd(1, 1, 99);

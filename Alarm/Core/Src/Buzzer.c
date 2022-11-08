@@ -72,7 +72,7 @@ void Buzzer_playTask(void* argument)
 				__HAL_TIM_SET_AUTORELOAD(&htim3, 100);
 				__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 100/2);
 				_countBeep++;
-				if(_countBeep==5){
+				if(_countBeep==20){
 					buzzer->bzState = BUZZER_STATE_OFF;
 					HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_1);
 					_countBeep = 0;

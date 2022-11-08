@@ -31,9 +31,10 @@ int Alarm_add(char * name,DateTime dateTime)
 	}
 	Alarm alarm;
 	strncpy(alarm.name,name,maxNameSize);
-
+	alarm.countSnooze = 0;
 	strncpy(alarm.melodyName,"melody0",maxNameSize);
 	alarm.dateTime = dateTime;
+
 	alarms[alarmsLen] = alarm;
 	alarmsLen++;
 
@@ -106,13 +107,23 @@ void Alarm_edit(char * name,DateTime dateTime)
 	}
 }
 
+void addSnoozeTime(char * name,uint32_t count)
+{
+	for(int i=0;i<alarmsLen;i++){
+			if(!strcmp(name,alarms[i].name)){
+				alarms[i].countSnooze = count;
+			}
+		}
+}
+
+
 void Alarm_startTask(void* argument)
 {
 	Rtc* rtc = (Rtc*)argument;
 	for(;;){
 		if(alarmsLen!=0){
 			for(int i=0;i<alarmsLen;i++){
-				if(Rtc_convertToSec(&alarms[i].dateTime) == Rtc_getSeconds(rtc)){
+				if(Rtc_convertToSec(&alarms[i].dateTime) + 10*alarms[i].countSnooze  == Rtc_getSeconds(rtc)){
 					Buzzer_changeToOn(&bz1);
 					Buzzer_changeMelody(&bz1, alarms[i].melodyName);
 					Led_changeToBlink(&ledR);
@@ -125,6 +136,10 @@ void Alarm_startTask(void* argument)
 				}
 				if(Button_getState(&btn2) == BUTTON_STATE_PRESS && Buzzer_getState(&bz1) == BUZZER_STATE_ON){
 					Buzzer_changeToOff(&bz1);
+
+				}
+				if(Button_getState(&btn1) == BUTTON_STATE_PRESS && Buzzer_getState(&bz1) == BUZZER_STATE_ON){
+					addSnoozeTime(alarms[i].name, alarms[i].countSnooze+1);
 
 				}
 			}
