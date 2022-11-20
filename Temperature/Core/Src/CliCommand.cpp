@@ -78,6 +78,7 @@ public:
 	dhtPrintCommand(const char* name, Dht* dht): CliCommand(name),_dht(dht){}
 	void doCommand(const char * param) override
 	{
+
 		_dht->printTemperature();
 	}
 };

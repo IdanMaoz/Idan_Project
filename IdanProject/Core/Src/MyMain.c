@@ -155,7 +155,6 @@ void MyMain(){
 	}
 
 }
-
 void HAL_GPIO_EXTI_Callback(uint16_t pin)
 {
 	Button_onInterrupt(&buttonSw1, pin);
@@ -163,7 +162,6 @@ void HAL_GPIO_EXTI_Callback(uint16_t pin)
 	Buzzer_reset();
 	Dht_onGpioInterrupt(&dht,pin);
 }
-
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 {
 	LightSensor_adcInterrupt(&lts1);

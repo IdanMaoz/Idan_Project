@@ -11,7 +11,6 @@
 #include "TimerTask.h"
 typedef enum DhtState_
 {
-	DHT_STATE_NONE,
 	DHT_STATE_AWAITING_RESPONSE_START,
 	DHT_STATE_AWAITING_RESPONSE_END,
 	DHT_STATE_RECEIVING_BITS,
@@ -35,9 +34,9 @@ private:
 public:
 	Dht(GPIO_TypeDef* gpioPort,  uint32_t gpioPin);
 	void readAsync();
-	void onGpioInterrupt();
+	void onGpioInterrupt(uint16_t pin);
 	int hasData();
-	void changeStateToNone();
+	void changeStateToStart();
 	double getTemperature();
 	double getHumidity();
 	int getSum();

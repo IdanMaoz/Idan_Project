@@ -17,8 +17,11 @@
 #include "LedPwm.h"
 #include "TImerContainer.h"
 #include "Dht.h"
+#include <cstring>
+#include <stdio.h>
 extern TIM_HandleTypeDef htim6;
 extern TIM_HandleTypeDef htim2;
+extern TIM_HandleTypeDef htim16;
 //Led ledR(LED2_GPIO_Port,LED2_Pin);
 //Led ledB(LED1_GPIO_Port,LED1_Pin);
 Button btn1(SW1_GPIO_Port,SW1_Pin);
@@ -33,6 +36,8 @@ Dht* dht;
 	 blueLed = new LedPwm(&htim2,TIM_CHANNEL_1);
 	 dht = new Dht(DHT11_GPIO_Port,  DHT11_Pin);
 	 dht->readAsync();
+	 //
+	 HAL_NVIC_EnableIRQ(TIM6_DAC_IRQn);
 	 //ledR.on();
 	 //ledB.on();
 	 HAL_TIM_Base_Start_IT(&htim6);
@@ -40,6 +45,7 @@ Dht* dht;
 	 //ledR.blink(700);
 	 //ledB.blink(1000);
 	 while(1){
+
 		 if(Communication_task()){
 			 Communication_handle();
 		 }
@@ -50,14 +56,15 @@ Dht* dht;
  {
 	 if(htim == &htim6){
 		 timerContainer.timeInterrupt();
+		 //dht->timerFunc();
 	 }
-
  }
+
+ static int count = 0;
  void HAL_GPIO_EXTI_Callback(uint16_t pin)
  {
-	btn1.onInterrupt();
-	btn2.onInterrupt();
-	dht->onGpioInterrupt();
-
-
+	count++;
+	//btn1.onInterrupt(pin);
+	//btn2.onInterrupt(pin);
+	dht->onGpioInterrupt(pin);
  }

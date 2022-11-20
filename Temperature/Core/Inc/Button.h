@@ -15,7 +15,7 @@ class Button {
 		uint16_t _gpioPin;
 	public:
 		Button(GPIO_TypeDef* gpioPort,uint16_t gpioPin);
-		void onInterrupt();
+		void onInterrupt(uint32_t pin);
 };
 
 #endif /* INC_BUTTON_H_ */

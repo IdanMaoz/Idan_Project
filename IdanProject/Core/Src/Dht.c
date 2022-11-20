@@ -20,8 +20,6 @@ void Dht_init(Dht* dht,GPIO_TypeDef* gpioPort,  uint32_t gpioPin){
 	dht->gpioPort=gpioPort;
 	dht->gpioPin=gpioPin;
 	dht->timeCounter=0;
-
-
 }
 
 
@@ -75,6 +73,7 @@ void Dht_onTimerInterrupt(void* obj)
 	Dht* dht=(Dht*)obj;
 	if(_startCount==1){
 		dht->timeCounter++;
+
 	}
 	if(dht->timeCounter>=MAX_TIME_COUNTER){
 		HAL_GPIO_WritePin(dht->gpioPort, dht->gpioPin, 1);
@@ -87,6 +86,7 @@ void Dht_onTimerInterrupt(void* obj)
 		HAL_GPIO_Init(dht->gpioPort, &gpioInitStruct);
 		MainTimer_unRegister(Dht_onTimerInterrupt, dht);
 		_startCount=0;
+
 		dht->dhtState = DHT_STATE_AWAITING_RESPONSE_START;
 	}
 }
@@ -95,13 +95,11 @@ void Dht_readAsync(Dht* dht)
 {
 	MainTimer_registerCallback(Dht_onTimerInterrupt, dht);
 	GPIO_InitTypeDef gpioInitStruct;
-
 	gpioInitStruct.Pin = dht->gpioPin;
 	gpioInitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	gpioInitStruct.Pull = GPIO_NOPULL;
 	gpioInitStruct.Speed = GPIO_SPEED_FREQ_LOW;
 	HAL_GPIO_Init(dht->gpioPort, &gpioInitStruct);
-
 	HAL_TIM_Base_Start(&htim16);
 	HAL_GPIO_WritePin(dht->gpioPort, dht->gpioPin, 0);
 	dht->timeCounter=0;
