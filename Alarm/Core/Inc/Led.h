@@ -7,7 +7,8 @@
 
 #ifndef INC_LED_H_
 #define INC_LED_H_
-
+#include "stdint.h"
+#include "main.h"
 typedef enum LedState_
 {
 	LED_STATE_OFF,
