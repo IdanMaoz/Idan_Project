@@ -18,7 +18,7 @@ typedef enum DhtState_
 
 }DhtState;
 
-class Dht : public TimerTask{
+class Dht {
 private:
 	GPIO_TypeDef* _gpioPort;
 	uint32_t _gpioPin;
@@ -40,7 +40,8 @@ public:
 	double getTemperature();
 	double getHumidity();
 	int getSum();
-	virtual void timerFunc() override;
+	int getStartCount();
+	int setStartCount();
 	void printTemperature();
 private:
 	void insertValue();

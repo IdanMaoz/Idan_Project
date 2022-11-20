@@ -7,6 +7,7 @@
 #include "main.h"
 #include "Communication.h"
 #include "CliContainer.h"
+#include "cmsis_os.h"
 #include <stdint.h>
 #include <string.h>
 #include <stdio.h>
@@ -108,3 +109,13 @@ typedef struct Command_
 
 	container.findCommand(cmd, param);
 }
+ extern "C" void comTask(void* argument)
+ {
+	 for(;;){
+		 if(Communication_task()){
+			 Communication_handle();
+		 }
+		 osDelay(1);
+	 }
+ }
+
