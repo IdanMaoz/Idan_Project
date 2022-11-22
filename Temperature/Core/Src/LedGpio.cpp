@@ -50,3 +50,4 @@ void LedGpio::timerFunc()
 	}
 
 }
+extern "C" void ledBlink

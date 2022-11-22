@@ -7,8 +7,8 @@
 
 #include "LedPwm.h"
 #include "main.h"
-#include "TImerContainer.h"
-extern timerContainer timerContainer;
+
+
 extern  TIM_HandleTypeDef htim2;
 LedPwm::LedPwm(TIM_HandleTypeDef* pwm,uint32_t channel)
 {
@@ -23,7 +23,7 @@ LedPwm::LedPwm(TIM_HandleTypeDef* pwm,uint32_t channel)
 
 void LedPwm::on()
 {
-	timerContainer.remove(this);
+
 	_state = STATE_ON;
 	HAL_TIM_Base_Start(_pwm);
 	HAL_TIM_PWM_Start(_pwm,_channel);
@@ -32,21 +32,21 @@ void LedPwm::on()
 void LedPwm::off()
 {
 
-	timerContainer.remove(this);
+
 	_state = STATE_OFF;
 	HAL_TIM_Base_Stop(_pwm);
 	HAL_TIM_PWM_Stop(_pwm,_channel);
 }
 void LedPwm::blink(int period)
 {
-	timerContainer.add(this);
+
 	_state = STATE_BLINK;
 	_counter = 0;
 	_maxCounter = period;
 	HAL_TIM_Base_Start(_pwm);
 	HAL_TIM_PWM_Start(_pwm, _channel);
 }
-void LedPwm::timerFunc()
+/*void LedPwm::timerFunc()
 {
 	if (_state == STATE_BLINK) {
 		_counter++;
@@ -61,6 +61,12 @@ void LedPwm::timerFunc()
 
 			_counter = 0;
 		}
+	}
+}*/
+extern "C" void ledBlinkTask(void* argument){
+	for(;;)
+	{
+
 	}
 }
 

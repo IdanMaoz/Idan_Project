@@ -207,9 +207,8 @@ void HAL_NVIC_SetPriority(IRQn_Type IRQn, uint32_t PreemptPriority, uint32_t Sub
 void HAL_NVIC_EnableIRQ(IRQn_Type IRQn)
 {
   /* Check the parameters */
-	printf("d\r\n");
   assert_param(IS_NVIC_DEVICE_IRQ(IRQn));
-  printf("n\r\n");
+
   /* Enable interrupt */
   NVIC_EnableIRQ(IRQn);
 }

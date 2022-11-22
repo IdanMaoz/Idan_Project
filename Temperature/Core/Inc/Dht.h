@@ -41,7 +41,7 @@ public:
 	double getHumidity();
 	int getSum();
 	int getStartCount();
-	int setStartCount();
+	void setStartCount();
 	void printTemperature();
 private:
 	void insertValue();

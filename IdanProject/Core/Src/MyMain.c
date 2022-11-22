@@ -79,6 +79,7 @@ void MyMain(){
 			printf("The temperature is: %.2lf\r\n",Dht_getTemperature(&dht));
 			printf("The sum is: %d\r\n",Dht_getSum(&dht));
 			Dht_changeStateToResStart(&dht);
+			Dht_readAsync(&dht);
 
 		}
 		if (Communication_task())

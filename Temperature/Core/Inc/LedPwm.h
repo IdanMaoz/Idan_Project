@@ -23,7 +23,7 @@ public:
 	void on() override;
 	void off() override;
 	void blink(int period) override;
-	virtual void timerFunc() override;
+
 };
 
 #endif /* INC_LEDPWM_H_ */
