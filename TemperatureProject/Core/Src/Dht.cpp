@@ -17,9 +17,9 @@ extern osSemaphoreId_t dhtSemHandle;
 extern TIM_HandleTypeDef htim16;
 extern Dht* dht;
 extern Led* redLed;
-extern Buzzer bz1;
-extern Button btn1;
-extern Button btn2;
+extern Buzzer* bz1;
+extern Button* btn1;
+extern Button* btn2;
 Dht::Dht(GPIO_TypeDef* gpioPort,  uint32_t gpioPin) {
 	_gpioPort=gpioPort;
 	_gpioPin=gpioPin;
@@ -29,8 +29,8 @@ Dht::Dht(GPIO_TypeDef* gpioPort,  uint32_t gpioPin) {
 	_temperature = 0.0;
 	_read = 0;
 	_wait = 0;
-	_warningThreshold = 24.5;
-	_criticalThreshold = 25;
+	_warningThreshold = 26;
+	_criticalThreshold = 27;
 
 }
 void Dht::insertValue(){
@@ -140,9 +140,9 @@ void Dht::setWarning(uint8_t warning)
 }
 void Dht::setCritical(uint8_t critical)
 {
-	printf("c%0.2lf\r\n",_criticalThreshold);
 	_criticalThreshold = critical;
 }
+
 
 void Dht::fallingInterrupt()
 {
@@ -172,41 +172,11 @@ extern "C" void dhtTask(void* argument){
 		else if(dht->hasData()){
 			dht->printTemperature();
 			dht->fallingInterrupt();
-			osDelay(5000);
+			osDelay(1000);
 		}
 		else{
 			osDelay(1);
 		}
 	}
 }
-extern "C" void dhtCheckTask(void* argument)
-{
-	for(;;){
-		if(dht->getTemperature()>dht->getCritical()){
-			redLed->blink();
-			bz1.start();
-			if((btn1.getState() == BUTTON_STATE_PRESS) || (btn2.getState() == BUTTON_STATE_PRESS)){
-				bz1.stop();
-			}
-
-		}
-		else if(dht->getTemperature()>dht->getWarning()){
-			redLed->on();
-			bz1.stop();
-		}
-		else{
-			redLed->off();
-		}
-		osDelay(1000);
-	}
-}
-
-
-
-
-
-
-
-
-
 

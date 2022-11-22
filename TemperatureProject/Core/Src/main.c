@@ -59,13 +59,6 @@ const osThreadAttr_t DhtTask_attributes = {
   .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
-/* Definitions for DhtCheckTask */
-osThreadId_t DhtCheckTaskHandle;
-const osThreadAttr_t DhtCheckTask_attributes = {
-  .name = "DhtCheckTask",
-  .stack_size = 256 * 4,
-  .priority = (osPriority_t) osPriorityLow,
-};
 /* Definitions for LedBlinkTask */
 osThreadId_t LedBlinkTaskHandle;
 const osThreadAttr_t LedBlinkTask_attributes = {
@@ -78,6 +71,13 @@ osThreadId_t ComTaskHandle;
 const osThreadAttr_t ComTask_attributes = {
   .name = "ComTask",
   .stack_size = 256 * 4,
+  .priority = (osPriority_t) osPriorityLow,
+};
+/* Definitions for SystemTask */
+osThreadId_t SystemTaskHandle;
+const osThreadAttr_t SystemTask_attributes = {
+  .name = "SystemTask",
+  .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
 /* Definitions for dhtSem */
@@ -97,9 +97,9 @@ static void MX_TIM16_Init(void);
 static void MX_TIM3_Init(void);
 void StartDefaultTask(void *argument);
 extern void dhtTask(void *argument);
-extern void dhtCheckTask(void *argument);
 extern void ledBlinkTask(void *argument);
 extern void comTask(void *argument);
+extern void systemTask(void *argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -175,14 +175,14 @@ int main(void)
   /* creation of DhtTask */
   DhtTaskHandle = osThreadNew(dhtTask, NULL, &DhtTask_attributes);
 
-  /* creation of DhtCheckTask */
-  DhtCheckTaskHandle = osThreadNew(dhtCheckTask, NULL, &DhtCheckTask_attributes);
-
   /* creation of LedBlinkTask */
   LedBlinkTaskHandle = osThreadNew(ledBlinkTask, NULL, &LedBlinkTask_attributes);
 
   /* creation of ComTask */
   ComTaskHandle = osThreadNew(comTask, NULL, &ComTask_attributes);
+
+  /* creation of SystemTask */
+  SystemTaskHandle = osThreadNew(systemTask, NULL, &SystemTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */

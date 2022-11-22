@@ -16,6 +16,7 @@ typedef enum DhtState_
 	DHT_STATE_DATA_RECIVED
 
 }DhtState;
+
 class Dht {
 private:
 	GPIO_TypeDef* _gpioPort;
@@ -42,6 +43,7 @@ public:
 	double getCritical();
 	void setWarning(uint8_t warning);
 	void setCritical(uint8_t critical);
+
 
 
 private:
