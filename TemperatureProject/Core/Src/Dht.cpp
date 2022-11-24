@@ -29,8 +29,8 @@ Dht::Dht(GPIO_TypeDef* gpioPort,  uint32_t gpioPin) {
 	_temperature = 0.0;
 	_read = 0;
 	_wait = 0;
-	_warningThreshold = 26;
-	_criticalThreshold = 27;
+	_warningThreshold = 25.0;
+	_criticalThreshold = 26.0;
 
 }
 void Dht::insertValue(){
@@ -136,11 +136,27 @@ double Dht::getCritical()
 }
 void Dht::setWarning(uint8_t warning)
 {
-	_warningThreshold = warning;
+	printf("wr %0.2lf\r\n",_warningThreshold);
+	if(warning >= _criticalThreshold){
+		printf("Warning threshold need to be smaller then critical threshold\r\n");
+	}
+	else{
+		_warningThreshold = warning;
+		printf("wr %0.2lf\r\n",_warningThreshold);
+	}
+
 }
 void Dht::setCritical(uint8_t critical)
 {
-	_criticalThreshold = critical;
+	printf("cr %0.2lf\r\n",_criticalThreshold);
+	if(critical <= _warningThreshold){
+		printf("Critical threshold need to be greater then warning threshold\r\n");
+	}
+	else{
+		_criticalThreshold = critical;
+		printf("cr %0.2lf\r\n",_criticalThreshold);
+	}
+
 }
 
 
@@ -170,7 +186,7 @@ extern "C" void dhtTask(void* argument){
 			osDelay(1);
 		}
 		else if(dht->hasData()){
-			dht->printTemperature();
+			//dht->printTemperature();
 			dht->fallingInterrupt();
 			osDelay(1000);
 		}

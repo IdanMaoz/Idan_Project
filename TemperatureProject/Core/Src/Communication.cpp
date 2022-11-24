@@ -30,9 +30,6 @@ typedef struct Command_
 
 }Command;
 
-//static Command _commandsArr[MAX_COMMANDS];
-
-//static int _CommandArrLen=0;
 
 
 

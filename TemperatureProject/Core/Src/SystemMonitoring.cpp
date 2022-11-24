@@ -12,11 +12,15 @@
 #include "main.h"
 #include "Buzzer.h"
 #include "Button.h"
+#include "Rtc.h"
+#include <iostream>
+#include <fstream>
 extern Dht* dht;
 extern Led* redLed;
 extern Buzzer* bz1;
 extern Button* btn1;
 extern Button* btn2;
+extern Rtc* rtc;
 extern SystemMonitoring* mySystem;
 SystemMonitoring::SystemMonitoring()
 {
@@ -39,22 +43,31 @@ extern "C" void systemTask(void* argument)
 				bz1->start();
 			}
 			redLed->blink();
-			if((btn1->getState() == BUTTON_STATE_PRESS) || (btn2->getState() == BUTTON_STATE_PRESS)){
+			if(((btn1->getState() == BUTTON_STATE_PRESS) || (btn2->getState() == BUTTON_STATE_PRESS))
+					&& mySystem->getSystemState() != STATE_CRITICAL_WITHOUT_BUZZER){
 				mySystem->setSystemState(STATE_CRITICAL_WITHOUT_BUZZER);
 				bz1->stop();
 			}
 		}
-		else if(dht->getTemperature()>dht->getWarning()){
-
+		else if((dht->getTemperature()>dht->getWarning()) && (mySystem->getSystemState() != STATE_WARNING)){
+			if(mySystem->getSystemState() == STATE_CRITICAL){
+				bz1->stop();
+			}
 			mySystem->setSystemState(STATE_WARNING);
 			redLed->on();
-			bz1->stop();
 		}
-		else{
+		else if((dht->getTemperature() < dht->getWarning()) && (mySystem->getSystemState() != STATE_NORMAL)){
 			mySystem->setSystemState(STATE_NORMAL);
 			redLed->off();
 		}
 		osDelay(1000);
+	}
+}
+
+extern "C" void saveTask(void* argument)
+{
+	for(;;){
+
 	}
 }
 
