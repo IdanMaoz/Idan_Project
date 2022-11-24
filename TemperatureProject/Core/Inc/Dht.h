@@ -27,8 +27,6 @@ private:
 	uint8_t _bitCounter;
 	uint8_t _read;
 	uint8_t _wait;
-	double _warningThreshold;
-	double _criticalThreshold;
 public:
 	Dht(GPIO_TypeDef* gpioPort,  uint32_t gpioPin);
 	void readAsync();
@@ -41,8 +39,8 @@ public:
 	void printTemperature();
 	double getWarning();
 	double getCritical();
-	void setWarning(uint8_t warning);
-	void setCritical(uint8_t critical);
+	void setWarning(double warning);
+	void setCritical(double critical);
 
 
 

@@ -14,9 +14,7 @@ LedGpio::LedGpio(GPIO_TypeDef* gpioPort,uint16_t gpioPin)
 	_gpioPin = gpioPin;
 	_state = LED_STATE_OFF;
 	_delay = 100;
-
 }
-
 void LedGpio::on()
 {
 
@@ -55,9 +53,7 @@ extern "C" void ledBlinkTask(void* argument)
 		if(redLed->getState() == LED_STATE_BLINK){
 			HAL_GPIO_TogglePin(redLed->getPort(), redLed->getPin());
 		}
-
 		osDelay(redLed->getDelay());
 	}
-
 }
 

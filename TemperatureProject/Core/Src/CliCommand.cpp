@@ -6,31 +6,32 @@
 #include "Buzzer.h"
 #include "Dht.h"
 #include "Rtc.h"
+#include "SystemMonitoring.h"
 #include <iostream>
 
 
-extern Dht* dht;
+extern SystemMonitoring* mySystem;
 extern Rtc* rtc;
 CliContainer container;
 
 class setWarningCommand: public CliCommand{
-	Dht* _dht;
+	SystemMonitoring* _system;
 public:
-	setWarningCommand(const char* name,Dht* dht) : CliCommand(name),_dht(dht){}
+	setWarningCommand(const char* name,SystemMonitoring* system) : CliCommand(name),_system(system){}
 	void doCommand(const char * param) override
 	{
-		_dht->setWarning(atof(param));
+		_system->setWarning(atof(param));
 	}
 
 };
 
 class setCriticalCommand: public CliCommand{
-	Dht* _dht;
+	SystemMonitoring* _system;
 public:
-	setCriticalCommand(const char* name,Dht* dht) : CliCommand(name),_dht(dht){}
+	setCriticalCommand(const char* name,SystemMonitoring* system) : CliCommand(name),_system(system){}
 	void doCommand(const char * param) override
 	{
-		_dht->setCritical(atof(param));
+		_system->setCritical(atof(param));
 	}
 
 };
@@ -41,19 +42,21 @@ public:
 	setRtcTime(const char* name,Rtc* rtc):CliCommand(name),_rtc(rtc){}
 	void doCommand(const char* param) override
 	{
-
 		DateTime time;
-
+		DateTime dateTime;
+		rtc->getTime(&dateTime);
+				printf("%02d:%02d:%02d-%d-%02d/%02d/%02d\r\n",
+						dateTime.hours, dateTime.min, dateTime.sec,
+						dateTime.weekDay,
+						dateTime.day, dateTime.month, dateTime.year);
 		_rtc->timeStrTok(param, &time);
 
 	}
 };
-
-
 void CliCommand::CliInit()
 {
-	container.addCommand(new setWarningCommand("warning", dht));
-	container.addCommand(new setCriticalCommand("critical", dht));
+	container.addCommand(new setWarningCommand("warning", mySystem));
+	container.addCommand(new setCriticalCommand("critical", mySystem));
 	container.addCommand(new setRtcTime("date",rtc));
 
 

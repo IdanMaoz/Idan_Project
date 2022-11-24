@@ -61,7 +61,6 @@ void Rtc::setTime(DateTime * dateTime)
 	buffer[4] = intToBcd(dateTime->day, 1, 31);
 	buffer[5] = intToBcd(dateTime->month, 1, 12);
 	buffer[6] = intToBcd(dateTime->year, 1, 99);
-
 	HAL_I2C_Mem_Write(_hi2c, _devAddr, 0, 1, buffer, RTC_DATE_TIME_SIZE, 0xFF);
 }
 static int checkToken(char* token,int low,int high)
@@ -75,7 +74,6 @@ static int checkToken(char* token,int low,int high)
 }
 void Rtc::timeStrTok(const char * params,DateTime* dateTime)
 {
-
 	char* token;
 	char cpyParm[20];
 	memcpy(cpyParm,params,strlen(params)+1);
