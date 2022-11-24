@@ -55,20 +55,11 @@ void setTime(DateTime* dateTime)
 	bz1 = new Buzzer;
 	mySystem = new SystemMonitoring;
 	rtc = new Rtc(&hi2c1,0XD0);
-
-
-
-
 	 //HAL_NVIC_EnableIRQ(TIM6_DAC_IRQn);
 
 	 //HAL_TIM_Base_Start_IT(&htim6);
 	 CliCommand::CliInit();
-
-
-
 }
-
-
  void HAL_GPIO_EXTI_Callback(uint16_t pin)
  {
 	btn1->onInterrupt(pin);
