@@ -37,8 +37,6 @@ public:
 	uint8_t wait();
 	double getTemperature();
 	void printTemperature();
-
-
 private:
 	void insertValue();
 };

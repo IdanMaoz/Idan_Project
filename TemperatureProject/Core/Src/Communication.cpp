@@ -13,27 +13,23 @@
 #include <stdio.h>
 extern UART_HandleTypeDef huart2;
 extern CliContainer container;
+extern Communication* com;
 #define MAX_BUFFER_LENGTH 100
 #define MAX_COMMANDS 20
 
-static uint8_t _cmdbuffer[MAX_BUFFER_LENGTH];
-static int _cmdcount = 0;
-static int _cmdprint = 0;
 
 
 
-typedef struct Command_
+
+Communication::Communication()
 {
-	char commandName[20];
-	HandlerFunc func;
-	void* object;
-
-}Command;
-
+	memset(_cmdbuffer,0,sizeof(_cmdbuffer));
+	_cmdcount = 0;
+	_cmdprint = 0;
+}
 
 
-
- int Communication_task()
+ int Communication::task()
 {
 	uint8_t ch;
 
@@ -92,7 +88,7 @@ typedef struct Command_
 	return 0;
 }
 
- void Communication_handle()
+ void Communication::handle()
 {
 	char cmd[20];
 	char param[20];
@@ -109,8 +105,8 @@ typedef struct Command_
  extern "C" void comTask(void* argument)
  {
 	 for(;;){
-		 if(Communication_task()){
-			 Communication_handle();
+		 if(com->task()){
+			 com->handle();
 		 }
 		 osDelay(1);
 	 }

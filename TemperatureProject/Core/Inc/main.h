@@ -67,7 +67,9 @@ void Error_Handler(void);
 #define USART_RX_Pin GPIO_PIN_3
 #define USART_RX_GPIO_Port GPIOA
 #define LED2_Pin GPIO_PIN_6
-#define LED2_GPIO_Port GPIOA
+#define LED2_GPIO_Port GPIOC
+#define LED1_Pin GPIO_PIN_8
+#define LED1_GPIO_Port GPIOC
 #define SW1_Pin GPIO_PIN_10
 #define SW1_GPIO_Port GPIOA
 #define SW1_EXTI_IRQn EXTI15_10_IRQn
@@ -81,8 +83,10 @@ void Error_Handler(void);
 #define DHT11_Pin GPIO_PIN_5
 #define DHT11_GPIO_Port GPIOB
 #define DHT11_EXTI_IRQn EXTI9_5_IRQn
+#define SD_CS_Pin GPIO_PIN_6
+#define SD_CS_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
-
+#define SD_SPI_HANDLE hspi1
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

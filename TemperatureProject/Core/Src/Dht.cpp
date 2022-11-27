@@ -28,7 +28,7 @@ void Dht::insertValue(){
 	_temperature=(double)_bytesArr[2]+((double)_bytesArr[3])/10;
 
 }
-extern "C" int _write(int fd, char* ptr, int len);
+
 void Dht::onGpioInterrupt(uint32_t pin)
 {
 	if(pin != _gpioPin)

@@ -28,18 +28,17 @@ SystemMonitoring::SystemMonitoring()
 	Threshold* threshold = (Threshold*)(flash->getAddres());
 	if(threshold ->_magicNumber != 123456){
 		_threshold._magicNumber = 123456;
-		_threshold._warningThreshold = 26.0;
-		_threshold._criticalThreshold = 27.0;
+		_threshold._warning = 26.0;
+		_threshold._critical = 27.0;
 		thresholdToFlash();
 	}
 	else{
 		_threshold._magicNumber = threshold->_magicNumber;
-		_threshold._criticalThreshold = threshold->_criticalThreshold;
-		_threshold._warningThreshold = threshold->_warningThreshold;
+		_threshold._critical = threshold->_critical;
+		_threshold._warning = threshold->_warning;
 
 	}
 	_systemStae = STATE_NORMAL;
-
 }
 void SystemMonitoring::thresholdToFlash()
 {
@@ -59,37 +58,37 @@ void SystemMonitoring::setSystemState(SystemState systemState)
 }
 void SystemMonitoring::setWarning(double warning)
 {
-	printf("wr %0.2lf\r\n",_threshold._warningThreshold);
-	if(warning >= _threshold._criticalThreshold){
+	printf("wr %0.2lf\r\n",_threshold._warning);
+	if(warning >= _threshold._critical){
 		printf("Warning threshold need to be smaller then critical threshold\r\n");
 	}
 	else{
-		_threshold._warningThreshold = warning;
+		_threshold._warning = warning;
 		thresholdToFlash();
-		printf("wr %0.2lf\r\n",_threshold._warningThreshold);
+		printf("wr %0.2lf\r\n",_threshold._warning);
 	}
 }
 
 void SystemMonitoring::setCritical(double critical)
 {
-	printf("cr %0.2lf\r\n",_threshold._criticalThreshold);
-	if(critical <= _threshold._warningThreshold){
+	printf("cr %0.2lf\r\n",_threshold._critical);
+	if(critical <= _threshold._warning){
 		printf("Critical threshold need to be greater then warning threshold\r\n");
 	}
 	else{
-		_threshold._criticalThreshold = critical;
+		_threshold._critical = critical;
 		thresholdToFlash();
+		printf("cr %0.2lf\r\n",_threshold._critical);
 	}
-	printf("cr %0.2lf\r\n",_threshold._criticalThreshold);
 }
 
 double SystemMonitoring::getWarning()
 {
-	return _threshold._warningThreshold;
+	return _threshold._warning;
 }
 double SystemMonitoring::getCritical()
 {
-	return _threshold._criticalThreshold;
+	return _threshold._critical;
 }
 
 extern "C" void systemTask(void* argument)

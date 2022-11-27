@@ -16,6 +16,7 @@
 #include "CliCommand.h"
 #include "SystemMonitoring.h"
 #include "Flash.h"
+#include "Communication.h"
 #include "Rtc.h"
 #include <cstring>
 #include <stdio.h>
@@ -24,7 +25,6 @@
 #include <iostream>
 #include <fstream>
 extern TIM_HandleTypeDef htim16;
-extern TIM_HandleTypeDef htim2;
 extern I2C_HandleTypeDef hi2c1;
 Button* btn1;
 Button* btn2;
@@ -35,6 +35,7 @@ Led* blueLed;
 Dht* dht;
 Rtc* rtc;
 Flash* flash;
+Communication* com;
 void setTime(DateTime* dateTime)
 {
 	dateTime->sec = 0;
@@ -51,13 +52,13 @@ void setTime(DateTime* dateTime)
  {
 	flash = new Flash;
 	redLed = new LedGpio(LED2_GPIO_Port,LED2_Pin);
-	blueLed = new LedPwm(&htim2,TIM_CHANNEL_1);
 	btn1 = new Button(SW1_GPIO_Port,SW1_Pin);
 	btn2 = new Button(SW2_GPIO_Port,SW2_Pin);
 	dht = new Dht(DHT11_GPIO_Port,  DHT11_Pin);
 	bz1 = new Buzzer;
 	mySystem = new SystemMonitoring;
 	rtc = new Rtc(&hi2c1,0XD0);
+	com = new Communication;
 	 //HAL_NVIC_EnableIRQ(TIM6_DAC_IRQn);
 
 	 //HAL_TIM_Base_Start_IT(&htim6);

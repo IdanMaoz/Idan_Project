@@ -7,11 +7,19 @@
 
 #ifndef SRC_COMMUNICATION_H_
 #define SRC_COMMUNICATION_H_
+#define MAX_BUFFER_LENGTH 100
 
-typedef void (*HandlerFunc)(char *);
+class Communication{
+private:
+	uint8_t _cmdbuffer[MAX_BUFFER_LENGTH];
+	int _cmdcount;
+	int _cmdprint;
+public:
+	Communication();
+	int task();
+	void handle();
+};
 
-int Communication_task();
-void Communication_handle();
 
 
 

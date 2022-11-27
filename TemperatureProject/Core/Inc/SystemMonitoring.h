@@ -19,8 +19,8 @@ typedef enum SystemState_
 typedef struct Threshold_
 {
 	uint32_t _magicNumber;
-	double _warningThreshold;
-	double _criticalThreshold;
+	double _warning;
+	double _critical;
 }Threshold;
 
 class SystemMonitoring{
