@@ -7,7 +7,7 @@
 
 #include "LedGpio.h"
 #include "cmsis_os.h"
-extern Led* redLed;
+extern LedGpio* redLed;
 LedGpio::LedGpio(GPIO_TypeDef* gpioPort,uint16_t gpioPin)
 {
 	_gpioPort = gpioPort;

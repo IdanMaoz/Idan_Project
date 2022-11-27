@@ -22,11 +22,9 @@ public:
 	void off() override;
 	void blink() override;
 	LedState getState() override;
-	uint16_t getDelay() override;
-	GPIO_TypeDef* getPort() override;
-	uint16_t getPin() override;
-
-
+	uint16_t getDelay();
+	GPIO_TypeDef* getPort();
+	uint16_t getPin();
 };
 
 #endif /* INC_LEDGPIO_H_ */

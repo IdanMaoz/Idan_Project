@@ -37,11 +37,6 @@ public:
 	uint8_t wait();
 	double getTemperature();
 	void printTemperature();
-	double getWarning();
-	double getCritical();
-	void setWarning(double warning);
-	void setCritical(double critical);
-
 
 
 private:

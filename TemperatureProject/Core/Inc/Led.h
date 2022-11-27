@@ -23,9 +23,5 @@ class Led {
 		virtual void off() = 0;
 		virtual void blink() = 0;
 		virtual LedState getState() = 0;
-		virtual uint16_t getDelay() = 0;
-		virtual GPIO_TypeDef* getPort() = 0;
-		virtual uint16_t getPin() = 0;
-
 };
 #endif /* INC_LED_H_ */

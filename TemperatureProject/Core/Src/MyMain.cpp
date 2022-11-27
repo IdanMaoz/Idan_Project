@@ -11,6 +11,7 @@
 #include "Led.h"
 #include "Buzzer.h"
 #include "LedGpio.h"
+#include "LedPwm.h"
 #include "Button.h"
 #include "CliCommand.h"
 #include "SystemMonitoring.h"
@@ -20,16 +21,17 @@
 #include <stdio.h>
 #include <iostream>
 
-
+#include <iostream>
+#include <fstream>
 extern TIM_HandleTypeDef htim16;
+extern TIM_HandleTypeDef htim2;
 extern I2C_HandleTypeDef hi2c1;
 Button* btn1;
 Button* btn2;
 Buzzer* bz1;
 SystemMonitoring* mySystem;
 Led * redLed;
-#include <iostream>
-#include <fstream>
+Led* blueLed;
 Dht* dht;
 Rtc* rtc;
 Flash* flash;
@@ -49,6 +51,7 @@ void setTime(DateTime* dateTime)
  {
 	flash = new Flash;
 	redLed = new LedGpio(LED2_GPIO_Port,LED2_Pin);
+	blueLed = new LedPwm(&htim2,TIM_CHANNEL_1);
 	btn1 = new Button(SW1_GPIO_Port,SW1_Pin);
 	btn2 = new Button(SW2_GPIO_Port,SW2_Pin);
 	dht = new Dht(DHT11_GPIO_Port,  DHT11_Pin);

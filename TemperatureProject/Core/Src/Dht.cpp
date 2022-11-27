@@ -6,20 +6,13 @@
  */
 
 #include "Dht.h"
-#include "Led.h"
 #include "main.h"
-#include "Buzzer.h"
-#include "Button.h"
 #include "cmsis_os.h"
 #include <cstring>
 #include <stdio.h>
 extern osSemaphoreId_t dhtSemHandle;
 extern TIM_HandleTypeDef htim16;
 extern Dht* dht;
-extern Led* redLed;
-extern Buzzer* bz1;
-extern Button* btn1;
-extern Button* btn2;
 Dht::Dht(GPIO_TypeDef* gpioPort,  uint32_t gpioPin) {
 	_gpioPort=gpioPort;
 	_gpioPin=gpioPin;

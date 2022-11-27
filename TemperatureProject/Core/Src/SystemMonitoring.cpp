@@ -12,16 +12,14 @@
 #include "main.h"
 #include "Buzzer.h"
 #include "Button.h"
-#include "Rtc.h"
 #include "Flash.h"
 #include <iostream>
-#include <fstream>
+
 extern Dht* dht;
 extern Led* redLed;
 extern Buzzer* bz1;
 extern Button* btn1;
 extern Button* btn2;
-extern Rtc* rtc;
 extern SystemMonitoring* mySystem;
 extern Flash* flash;
 

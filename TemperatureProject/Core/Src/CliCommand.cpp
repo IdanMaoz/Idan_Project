@@ -1,9 +1,6 @@
 
 #include "CliCommand.h"
-#include "Led.h"
-#include "Communication.h"
 #include "CliContainer.h"
-#include "Buzzer.h"
 #include "Dht.h"
 #include "Rtc.h"
 #include "SystemMonitoring.h"
