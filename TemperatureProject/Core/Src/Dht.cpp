@@ -147,7 +147,7 @@ extern "C" void dhtTask(void* argument){
 		else if(dht->hasData()){
 			//dht->printTemperature();
 			dht->fallingInterrupt();
-			//osSemaphoreRelease(dhtDataReadyHandle);
+			osSemaphoreRelease(dhtDataReadyHandle);
 			osDelay(1000);
 		}
 		else{

@@ -102,17 +102,17 @@ extern "C" void systemTask(void* argument)
 {
 
 	for(;;){
-		if(dht->getTemperature()>mySystem->getCritical()){
+		double temp = dht->getTemperature();
+		if(temp>mySystem->getCritical()){
 			if(mySystem->getSystemState() == STATE_WARNING){
 				mySystem->setSystemState(STATE_CRITICAL);
 				bz1->start();
 				char arr[100];
 				DateTime dateTime;
 				rtc->getTime(&dateTime);
-				sprintf(arr,"%02d:%02d:%02d-%d-%02d/%02d/%02d	Critical	"
-						"	The temperature increases above the critical threshold",
+				sprintf(arr,"%02d:%02d:%02d-%d-%02d/%02d/%02d	Critical	temperature=%0.2lf critical=%0.2lf",
 						dateTime.hours,dateTime.min,dateTime.sec,dateTime.weekDay,dateTime.day,
-						dateTime.month, dateTime.year);
+						dateTime.month, dateTime.year,temp,mySystem->getCritical());
 				eventsLogFile->write(arr,sizeof(arr));
 
 			}
@@ -123,7 +123,7 @@ extern "C" void systemTask(void* argument)
 				bz1->stop();
 			}
 		}
-		else if((dht->getTemperature()>mySystem->getWarning()) && (mySystem->getSystemState() != STATE_WARNING)){
+		else if((temp > mySystem->getWarning()) && (mySystem->getSystemState() != STATE_WARNING)){
 			if(mySystem->getSystemState() == STATE_CRITICAL){
 				bz1->stop();
 			}
@@ -131,24 +131,22 @@ extern "C" void systemTask(void* argument)
 				char arr[100];
 				DateTime dateTime;
 				rtc->getTime(&dateTime);
-				sprintf(arr,"%02d:%02d:%02d-%d-%02d/%02d/%02d	Warning	"
-						"	The temperature increases above the warning threshold",
+				sprintf(arr,"%02d:%02d:%02d-%d-%02d/%02d/%02d	Warning		temperature=%0.2lf warning=%0.2lf",
 						dateTime.hours,dateTime.min,dateTime.sec,dateTime.weekDay,dateTime.day,
-						dateTime.month, dateTime.year);
+						dateTime.month, dateTime.year,temp,mySystem->getWarning());
 				eventsLogFile->write(arr,sizeof(arr));
 			}
 
 			mySystem->setSystemState(STATE_WARNING);
 			redLed->on();
 		}
-		else if((dht->getTemperature() < mySystem->getWarning()) && (mySystem->getSystemState() != STATE_NORMAL)){
+		else if((temp < mySystem->getWarning()) && (mySystem->getSystemState() != STATE_NORMAL)){
 			char arr[100];
 			DateTime dateTime;
 			rtc->getTime(&dateTime);
-			sprintf(arr,"%02d:%02d:%02d-%d-%02d/%02d/%02d	Normal	"
-					"	The temperature decreases the threshold",
+			sprintf(arr,"%02d:%02d:%02d-%d-%02d/%02d/%02d	Normal		temperature=%0.2lf warning=%0.2lf",
 					dateTime.hours,dateTime.min,dateTime.sec,dateTime.weekDay,dateTime.day,
-					dateTime.month, dateTime.year);
+					dateTime.month, dateTime.year,temp,mySystem->getWarning());
 			eventsLogFile->write(arr,sizeof(arr));
 			mySystem->setSystemState(STATE_NORMAL);
 			redLed->off();
@@ -159,19 +157,17 @@ extern "C" void systemTask(void* argument)
 
 extern "C" void saveTask(void* argument)
 {
+	osSemaphoreAcquire(dhtDataReadyHandle, osWaitForever);
 	for(;;){
-		//osSemaphoreAcquire(dhtDataReadyHandle, osWaitForever);
+		osSemaphoreAcquire(dhtDataReadyHandle, osWaitForever);
 		double temp = dht->getTemperature();
+		char arr[100];
+		DateTime dateTime;
+		rtc->getTime(&dateTime);
+		sprintf(arr,"%02d:%02d:%02d-%d-%02d/%02d/%02d	temp: %0.2lf",dateTime.hours,dateTime.min,
+				dateTime.sec,dateTime.weekDay,dateTime.day, dateTime.month, dateTime.year,temp);
+		tempFile->write(arr,sizeof(arr));
 
-		if(temp>0.0){
-			printf("tm %0.2lf\r\n",temp);
-			char arr[100];
-			DateTime dateTime;
-			rtc->getTime(&dateTime);
-			sprintf(arr,"%02d:%02d:%02d-%d-%02d/%02d/%02d	temp: %0.2lf",dateTime.hours,dateTime.min,
-					dateTime.sec,dateTime.weekDay,dateTime.day, dateTime.month, dateTime.year,temp);
-			tempFile->write(arr,sizeof(arr));
-		}
 		osDelay(5000);
 	}
 }

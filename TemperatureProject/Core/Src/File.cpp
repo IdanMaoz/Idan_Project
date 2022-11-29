@@ -16,13 +16,20 @@ File::File(char* name) {
 void File::clear()
 {
 	FRESULT fres;
-	FIL fil;
-	fres = f_open(&fil, _name, FA_CREATE_ALWAYS );
-	if(fres != FR_OK) {
-		printf("f_open error (%i)\r\n", fres);
+	fres = f_unlink(_name);
+	if(fres!=FR_OK){
+		if(fres == 4){
+			printf("Events log file already deleted\r\n");
+		}
+		else{
+			printf("f_unlink error (%i)\r\n",fres);
+		}
 	}
-	f_close(&fil);
+	else{
+		printf("Events log file deleted successfully\r\n");
+	}
 }
+
 void File::read()
 {
 	FIL fil;
@@ -30,13 +37,19 @@ void File::read()
 	FRESULT fres;
 	fres = f_open(&fil, _name, FA_READ);
 	if (fres != FR_OK) {
-		printf("f_open error (%i)\r\n",fres);
-		while(1);
+		if(fres == 4){
+			printf("Events log file doesn't exists\r\n");
+		}
+		else{
+			printf("f_open error (%i)\r\n",fres);
+		}
 	}
-	TCHAR* rres = f_gets((TCHAR*)readBuf, 100, &fil);
-	while(rres != 0) {
-		printf("%s\r", readBuf);
-		rres = f_gets((TCHAR*)readBuf, 100, &fil);
+	else{
+		TCHAR* rres = f_gets((TCHAR*)readBuf, 100, &fil);
+		while(rres != 0) {
+			printf("%s\r", readBuf);
+			rres = f_gets((TCHAR*)readBuf, 100, &fil);
+		}
 	}
 	f_close(&fil);
 }
@@ -45,7 +58,7 @@ void File::write(char* data,size_t size)
 {
 	FRESULT fres;
 	FIL fil;
-	BYTE writeBuf[100];
+	BYTE writeBuf[150];
 	fres = f_open(&fil, _name, FA_OPEN_APPEND | FA_WRITE);
 	if(fres != FR_OK) {
 		printf("f_open error (%i)\r\n", fres);
