@@ -30,6 +30,7 @@ public:
 	void setTime(DateTime * dateTime);
 	void timeStrTok(const char * params,DateTime* dateTime);
 
+
 };
 
 #endif /* INC_RTC_H_ */

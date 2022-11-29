@@ -11,6 +11,7 @@
 #include <cstring>
 #include <stdio.h>
 extern osSemaphoreId_t dhtSemHandle;
+extern osSemaphoreId dhtDataReadyHandle;
 extern TIM_HandleTypeDef htim16;
 extern Dht* dht;
 Dht::Dht(GPIO_TypeDef* gpioPort,  uint32_t gpioPin) {
@@ -134,7 +135,7 @@ void Dht::fallingInterrupt()
 
 extern "C" void dhtTask(void* argument){
 	for(;;){
-		osSemaphoreAcquire( dhtSemHandle, osWaitForever);
+		osSemaphoreAcquire(dhtSemHandle, osWaitForever);
 		if(!dht->alreadyRead()){
 			dht->readAsync();
 			osDelay(19);
@@ -146,6 +147,7 @@ extern "C" void dhtTask(void* argument){
 		else if(dht->hasData()){
 			//dht->printTemperature();
 			dht->fallingInterrupt();
+			//osSemaphoreRelease(dhtDataReadyHandle);
 			osDelay(1000);
 		}
 		else{

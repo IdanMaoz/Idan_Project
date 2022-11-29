@@ -1,9 +1,9 @@
 #MicroXplorer Configuration settings - do not modify
-FREERTOS.BinarySemaphores01=dhtSem,Dynamic,NULL
-FREERTOS.FootprintOK=true
+FREERTOS.BinarySemaphores01=dhtSem,Dynamic,NULL;dhtDataReady,Dynamic,NULL
+FREERTOS.FootprintOK=false
 FREERTOS.IPParameters=Tasks01,FootprintOK,BinarySemaphores01,configTOTAL_HEAP_SIZE
-FREERTOS.Tasks01=defaultTask,24,128,StartDefaultTask,Default,NULL,Dynamic,NULL,NULL;DhtTask,24,256,dhtTask,As external,NULL,Dynamic,NULL,NULL;LedBlinkTask,8,128,ledBlinkTask,As external,NULL,Dynamic,NULL,NULL;ComTask,8,256,comTask,As external,NULL,Dynamic,NULL,NULL;SystemTask,8,128,systemTask,As external,NULL,Dynamic,NULL,NULL;SaveTask,8,256,saveTask,As external,NULL,Dynamic,NULL,NULL
-FREERTOS.configTOTAL_HEAP_SIZE=6000
+FREERTOS.Tasks01=defaultTask,24,128,StartDefaultTask,Default,NULL,Dynamic,NULL,NULL;DhtTask,24,256,dhtTask,As external,NULL,Dynamic,NULL,NULL;LedBlinkTask,8,128,ledBlinkTask,As external,NULL,Dynamic,NULL,NULL;ComTask,8,512,comTask,As external,NULL,Dynamic,NULL,NULL;SystemTask,8,640,systemTask,As external,NULL,Dynamic,NULL,NULL;SaveTask,8,640,saveTask,As external,NULL,Dynamic,NULL,NULL
+FREERTOS.configTOTAL_HEAP_SIZE=11000
 File.Version=6
 GPIO.groupedBy=Group By Peripherals
 I2C1.IPParameters=Timing

@@ -13,8 +13,12 @@
 #include "Buzzer.h"
 #include "Button.h"
 #include "Flash.h"
+#include "File.h"
+#include "Rtc.h"
+#include "SDCard.h"
 #include <iostream>
-
+#include <cstring>
+extern Rtc* rtc;
 extern Dht* dht;
 extern Led* redLed;
 extern Buzzer* bz1;
@@ -22,7 +26,10 @@ extern Button* btn1;
 extern Button* btn2;
 extern SystemMonitoring* mySystem;
 extern Flash* flash;
-
+extern File* tempFile;
+extern File* eventsLogFile;
+extern SDCard* sdCard;
+extern osSemaphoreId dhtDataReadyHandle;
 SystemMonitoring::SystemMonitoring()
 {
 	Threshold* threshold = (Threshold*)(flash->getAddres());
@@ -93,11 +100,21 @@ double SystemMonitoring::getCritical()
 
 extern "C" void systemTask(void* argument)
 {
+
 	for(;;){
 		if(dht->getTemperature()>mySystem->getCritical()){
 			if(mySystem->getSystemState() == STATE_WARNING){
 				mySystem->setSystemState(STATE_CRITICAL);
 				bz1->start();
+				char arr[100];
+				DateTime dateTime;
+				rtc->getTime(&dateTime);
+				sprintf(arr,"%02d:%02d:%02d-%d-%02d/%02d/%02d	Critical	"
+						"	The temperature increases above the critical threshold",
+						dateTime.hours,dateTime.min,dateTime.sec,dateTime.weekDay,dateTime.day,
+						dateTime.month, dateTime.year);
+				eventsLogFile->write(arr,sizeof(arr));
+
 			}
 			redLed->blink();
 			if(((btn1->getState() == BUTTON_STATE_PRESS) || (btn2->getState() == BUTTON_STATE_PRESS))
@@ -110,10 +127,29 @@ extern "C" void systemTask(void* argument)
 			if(mySystem->getSystemState() == STATE_CRITICAL){
 				bz1->stop();
 			}
+			if(mySystem->getSystemState() == STATE_NORMAL){
+				char arr[100];
+				DateTime dateTime;
+				rtc->getTime(&dateTime);
+				sprintf(arr,"%02d:%02d:%02d-%d-%02d/%02d/%02d	Warning	"
+						"	The temperature increases above the warning threshold",
+						dateTime.hours,dateTime.min,dateTime.sec,dateTime.weekDay,dateTime.day,
+						dateTime.month, dateTime.year);
+				eventsLogFile->write(arr,sizeof(arr));
+			}
+
 			mySystem->setSystemState(STATE_WARNING);
 			redLed->on();
 		}
 		else if((dht->getTemperature() < mySystem->getWarning()) && (mySystem->getSystemState() != STATE_NORMAL)){
+			char arr[100];
+			DateTime dateTime;
+			rtc->getTime(&dateTime);
+			sprintf(arr,"%02d:%02d:%02d-%d-%02d/%02d/%02d	Normal	"
+					"	The temperature decreases the threshold",
+					dateTime.hours,dateTime.min,dateTime.sec,dateTime.weekDay,dateTime.day,
+					dateTime.month, dateTime.year);
+			eventsLogFile->write(arr,sizeof(arr));
 			mySystem->setSystemState(STATE_NORMAL);
 			redLed->off();
 		}
@@ -124,7 +160,19 @@ extern "C" void systemTask(void* argument)
 extern "C" void saveTask(void* argument)
 {
 	for(;;){
-		osDelay(100000);
+		//osSemaphoreAcquire(dhtDataReadyHandle, osWaitForever);
+		double temp = dht->getTemperature();
+
+		if(temp>0.0){
+			printf("tm %0.2lf\r\n",temp);
+			char arr[100];
+			DateTime dateTime;
+			rtc->getTime(&dateTime);
+			sprintf(arr,"%02d:%02d:%02d-%d-%02d/%02d/%02d	temp: %0.2lf",dateTime.hours,dateTime.min,
+					dateTime.sec,dateTime.weekDay,dateTime.day, dateTime.month, dateTime.year,temp);
+			tempFile->write(arr,sizeof(arr));
+		}
+		osDelay(5000);
 	}
 }
 

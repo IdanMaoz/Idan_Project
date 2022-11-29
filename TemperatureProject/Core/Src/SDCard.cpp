@@ -17,7 +17,7 @@ void SDCard::openSystem()
 {
 	FATFS FatFs;
 	FRESULT fres;
-	fres = f_mount(&FatFs, "", 1); //1=mount now
+	fres = f_mount(&FatFs, "", 1);
 	if (fres != FR_OK) {
 		printf("f_mount error (%i)\r\n", fres);
 	while(1);

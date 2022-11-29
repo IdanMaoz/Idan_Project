@@ -3,12 +3,14 @@
 #include "CliContainer.h"
 #include "Dht.h"
 #include "Rtc.h"
+#include "File.h"
 #include "SystemMonitoring.h"
 #include <iostream>
 
 
 extern SystemMonitoring* mySystem;
 extern Rtc* rtc;
+extern File* eventsLogFile;
 CliContainer container;
 
 class setWarningCommand: public CliCommand{
@@ -50,11 +52,35 @@ public:
 
 	}
 };
+class printLogFile: public CliCommand{
+	File* _file;
+public:
+	printLogFile(const char* name,File* file) : CliCommand(name),_file(file){}
+	void doCommand(const char * param) override
+	{
+		_file->read();
+	}
+
+};
+class clearLogFile: public CliCommand{
+	File* _file;
+public:
+	clearLogFile(const char* name,File* file) : CliCommand(name),_file(file){}
+	void doCommand(const char * param) override
+	{
+		_file->clear();
+	}
+
+};
+
+
 void CliCommand::CliInit()
 {
 	container.addCommand(new setWarningCommand("warning", mySystem));
 	container.addCommand(new setCriticalCommand("critical", mySystem));
 	container.addCommand(new setRtcTime("date",rtc));
+	container.addCommand(new printLogFile("print",eventsLogFile));
+	container.addCommand(new clearLogFile("clear",eventsLogFile));
 
 
 }

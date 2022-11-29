@@ -18,6 +18,8 @@
 #include "Flash.h"
 #include "Communication.h"
 #include "Rtc.h"
+#include "SDCard.h"
+#include "File.h"
 #include <cstring>
 #include <stdio.h>
 #include <iostream>
@@ -35,19 +37,10 @@ Led* blueLed;
 Dht* dht;
 Rtc* rtc;
 Flash* flash;
+SDCard* sdCard;
+File* tempFile;
+File* eventsLogFile;
 Communication* com;
-void setTime(DateTime* dateTime)
-{
-	dateTime->sec = 0;
-	dateTime->min = 7;
-	dateTime->hours = 16;
-	dateTime->weekDay = 5;
-	dateTime->day = 24;
-	dateTime->month = 11;
-	dateTime->year = 22;
-
-
-}
  void myMain()
  {
 	flash = new Flash;
@@ -58,10 +51,14 @@ void setTime(DateTime* dateTime)
 	bz1 = new Buzzer;
 	mySystem = new SystemMonitoring;
 	rtc = new Rtc(&hi2c1,0XD0);
+	sdCard = new SDCard;
+	sdCard->openSystem();
+	char tempFileName[] = "tempFile.txt";
+	char eventsLogFileName[] = "logFile.txt";
+	tempFile = new File(tempFileName);
+	eventsLogFile = new File(eventsLogFileName);
 	com = new Communication;
-	 //HAL_NVIC_EnableIRQ(TIM6_DAC_IRQn);
 
-	 //HAL_TIM_Base_Start_IT(&htim6);
 	 CliCommand::CliInit();
 }
  void HAL_GPIO_EXTI_Callback(uint16_t pin)

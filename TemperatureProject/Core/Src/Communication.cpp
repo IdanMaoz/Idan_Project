@@ -108,7 +108,7 @@ Communication::Communication()
 		 if(com->task()){
 			 com->handle();
 		 }
-		 osDelay(1);
+		 osDelay(10);
 	 }
  }
 
