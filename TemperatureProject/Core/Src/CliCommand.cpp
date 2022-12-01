@@ -18,7 +18,12 @@ public:
 	setWarningCommand(const char* name,SystemMonitoring* system) : CliCommand(name),_system(system){}
 	void doCommand(const char * param) override
 	{
-		_system->setWarning(atof(param));
+		if(isdigit(param[0])){
+			_system->setWarning(atof(param));
+		}
+		else{
+			printf("Warning param isn't number\r\n");
+		}
 	}
 
 };
@@ -29,7 +34,12 @@ public:
 	setCriticalCommand(const char* name,SystemMonitoring* system) : CliCommand(name),_system(system){}
 	void doCommand(const char * param) override
 	{
-		_system->setCritical(atof(param));
+		if(isdigit(param[0])){
+			_system->setCritical(atof(param));
+		}
+		else{
+			printf("Critical param isn't number\r\n");
+		}
 	}
 
 };

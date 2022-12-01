@@ -178,17 +178,17 @@ extern "C" void systemTask(void* argument)
 
 	for(;;){
 		double temp = dht->getTemperature();
-		if(temp>mySystem->getCritical()){
-			if(mySystem->getSystemState() == STATE_WARNING){
+		if(temp > mySystem->getCritical()){
+			if(mySystem->getSystemState() == STATE_WARNING || mySystem->getSystemState() == STATE_NORMAL){
 				mySystem->setSystemState(STATE_CRITICAL);
 				bz1->start();
 				char arr[100];
 				DateTime dateTime;
 				rtc->getTime(&dateTime);
-				sprintf(arr,"%02d:%02d:%02d-%d-%02d/%02d/%02d     Critical	temperature=%0.2lf, critical=%0.2lf",
+				sprintf(arr,"%02d:%02d:%02d-%d-%02d/%02d/%02d     Critical       temperature=%0.2lf, critical=%0.2lf",
 						dateTime.hours,dateTime.min,dateTime.sec,dateTime.weekDay,dateTime.day,
 						dateTime.month, dateTime.year,temp,mySystem->getCritical());
-				eventsLogFile->write(arr,sizeof(arr));
+				eventsLogFile->write(arr, strlen(arr));
 
 			}
 			redLed->blink();
@@ -206,10 +206,10 @@ extern "C" void systemTask(void* argument)
 				char arr[100];
 				DateTime dateTime;
 				rtc->getTime(&dateTime);
-				sprintf(arr,"%02d:%02d:%02d-%d-%02d/%02d/%02d     Warning		temperature=%0.2lf, warning=%0.2lf",
+				sprintf(arr,"%02d:%02d:%02d-%d-%02d/%02d/%02d     Warning        temperature=%0.2lf, warning=%0.2lf",
 						dateTime.hours,dateTime.min,dateTime.sec,dateTime.weekDay,dateTime.day,
 						dateTime.month, dateTime.year,temp,mySystem->getWarning());
-				eventsLogFile->write(arr,sizeof(arr));
+				eventsLogFile->write(arr, strlen(arr));
 			}
 
 			mySystem->setSystemState(STATE_WARNING);
@@ -219,10 +219,10 @@ extern "C" void systemTask(void* argument)
 			char arr[100];
 			DateTime dateTime;
 			rtc->getTime(&dateTime);
-			sprintf(arr,"%02d:%02d:%02d-%d-%02d/%02d/%02d     Normal		temperature=%0.2lf, warning=%0.2lf",
+			sprintf(arr,"%02d:%02d:%02d-%d-%02d/%02d/%02d     Normal         temperature=%0.2lf, warning=%0.2lf",
 					dateTime.hours,dateTime.min,dateTime.sec,dateTime.weekDay,dateTime.day,
 					dateTime.month, dateTime.year,temp,mySystem->getWarning());
-			eventsLogFile->write(arr,sizeof(arr));
+			eventsLogFile->write(arr, strlen(arr));
 			mySystem->setSystemState(STATE_NORMAL);
 			redLed->off();
 		}
@@ -248,10 +248,9 @@ extern "C" void saveTask(void* argument)
 		char arr[100];
 		DateTime dateTime;
 		rtc->getTime(&dateTime);
-		sprintf(arr,"%02d:%02d:%02d-%d-%02d/%02d/%02d	temp: %0.2lf",dateTime.hours,dateTime.min,
+		sprintf(arr,"%02d:%02d:%02d-%d-%02d/%02d/%02d	temperature=%0.2lf",dateTime.hours,dateTime.min,
 				dateTime.sec,dateTime.weekDay,dateTime.day, dateTime.month, dateTime.year,temp);
-		tempFile->write(arr,sizeof(arr));
-
+		tempFile->write(arr,strlen(arr));
 		osDelay(60000);
 	}
 }

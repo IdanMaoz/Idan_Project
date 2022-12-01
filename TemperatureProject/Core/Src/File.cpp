@@ -72,6 +72,7 @@ void File::read()
 			printf("%s\r", readBuf);
 			rres = f_gets((TCHAR*)readBuf, 100, &fil);
 		}
+		printf("\r\n");
 	}
 	f_close(&fil);
 }
