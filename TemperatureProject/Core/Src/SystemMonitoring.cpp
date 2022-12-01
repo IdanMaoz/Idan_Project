@@ -1,9 +1,3 @@
-/*
- * systemMonitoring.cpp
- *
- *  Created on: 22 Nov 2022
- *      Author: student
- */
 
 #include "systemMonitoring.h"
 #include "cmsis_os.h"
@@ -15,7 +9,6 @@
 #include "Flash.h"
 #include "File.h"
 #include "Rtc.h"
-#include "SDCard.h"
 #include <iostream>
 #include <cstring>
 extern Rtc* rtc;
@@ -28,8 +21,17 @@ extern SystemMonitoring* mySystem;
 extern Flash* flash;
 extern File* tempFile;
 extern File* eventsLogFile;
-extern SDCard* sdCard;
 extern osSemaphoreId dhtDataReadyHandle;
+
+/**
+ * @brief  SystemMonitoring
+ *         init the system
+ *         @note
+ *
+ *
+ * @param  none
+ * @retval none
+ */
 SystemMonitoring::SystemMonitoring()
 {
 	Threshold* threshold = (Threshold*)(flash->getAddres());
@@ -47,6 +49,16 @@ SystemMonitoring::SystemMonitoring()
 	}
 	_systemStae = STATE_NORMAL;
 }
+
+/**
+ * @brief  thresholdToFlash
+ *         write the thresholds to the flash
+ *         @note
+ *
+ *
+ * @param  none
+ * @retval none
+ */
 void SystemMonitoring::thresholdToFlash()
 {
 	uint64_t* bytesThreshold = (uint64_t*)(&_threshold);
@@ -55,49 +67,112 @@ void SystemMonitoring::thresholdToFlash()
 	flash->program(bytesThreshold, sizeof(_threshold));
 	HAL_FLASH_Lock();
 }
+
+/**
+ * @brief  getSystemState
+ *         get the system state
+ *         @note
+ *
+ *
+ * @param  none
+ * @retval the system state
+ */
 SystemState SystemMonitoring::getSystemState()
 {
 	return _systemStae;
 }
+
+/**
+ * @brief  setSystemState
+ *         set the system state
+ *         @note
+ *
+ *
+ * @param  SystemState systemState - the state of system
+ * @retval none
+ */
 void SystemMonitoring::setSystemState(SystemState systemState)
 {
 	_systemStae = systemState;
 }
+
+/**
+ * @brief  setWarning
+ *         set the warning threshold
+ *         @note
+ *
+ *
+ * @param  double warning - the warning threshold
+ * @retval none
+ */
 void SystemMonitoring::setWarning(double warning)
 {
-	printf("wr %0.2lf\r\n",_threshold._warning);
 	if(warning >= _threshold._critical){
 		printf("Warning threshold need to be smaller then critical threshold\r\n");
 	}
 	else{
 		_threshold._warning = warning;
 		thresholdToFlash();
-		printf("wr %0.2lf\r\n",_threshold._warning);
 	}
 }
 
+/**
+ * @brief  setCritical
+ *         set the critical threshold
+ *         @note
+ *
+ *
+ * @param  double critical - the critical threshold
+ * @retval none
+ */
 void SystemMonitoring::setCritical(double critical)
 {
-	printf("cr %0.2lf\r\n",_threshold._critical);
 	if(critical <= _threshold._warning){
 		printf("Critical threshold need to be greater then warning threshold\r\n");
 	}
 	else{
 		_threshold._critical = critical;
 		thresholdToFlash();
-		printf("cr %0.2lf\r\n",_threshold._critical);
 	}
 }
 
+/**
+ * @brief  getWarning
+ *         get the warning threshold
+ *         @note
+ *
+ *
+ * @param  none
+ * @retval the warning threshold
+ */
 double SystemMonitoring::getWarning()
 {
 	return _threshold._warning;
 }
+
+/**
+ * @brief  getCritical
+ *         get the critical threshold
+ *         @note
+ *
+ *
+ * @param  none
+ * @retval the critical threshold
+ */
 double SystemMonitoring::getCritical()
 {
 	return _threshold._critical;
 }
 
+/**
+ * @brief  systemTask
+ *         check every 1 second the temperature and manage the thresholds
+ *         @note
+ *
+ *
+ * @param  void* argument - a potential argument
+ * @retval none
+ */
 extern "C" void systemTask(void* argument)
 {
 
@@ -110,7 +185,7 @@ extern "C" void systemTask(void* argument)
 				char arr[100];
 				DateTime dateTime;
 				rtc->getTime(&dateTime);
-				sprintf(arr,"%02d:%02d:%02d-%d-%02d/%02d/%02d	Critical	temperature=%0.2lf critical=%0.2lf",
+				sprintf(arr,"%02d:%02d:%02d-%d-%02d/%02d/%02d     Critical	temperature=%0.2lf, critical=%0.2lf",
 						dateTime.hours,dateTime.min,dateTime.sec,dateTime.weekDay,dateTime.day,
 						dateTime.month, dateTime.year,temp,mySystem->getCritical());
 				eventsLogFile->write(arr,sizeof(arr));
@@ -131,7 +206,7 @@ extern "C" void systemTask(void* argument)
 				char arr[100];
 				DateTime dateTime;
 				rtc->getTime(&dateTime);
-				sprintf(arr,"%02d:%02d:%02d-%d-%02d/%02d/%02d	Warning		temperature=%0.2lf warning=%0.2lf",
+				sprintf(arr,"%02d:%02d:%02d-%d-%02d/%02d/%02d     Warning		temperature=%0.2lf, warning=%0.2lf",
 						dateTime.hours,dateTime.min,dateTime.sec,dateTime.weekDay,dateTime.day,
 						dateTime.month, dateTime.year,temp,mySystem->getWarning());
 				eventsLogFile->write(arr,sizeof(arr));
@@ -144,7 +219,7 @@ extern "C" void systemTask(void* argument)
 			char arr[100];
 			DateTime dateTime;
 			rtc->getTime(&dateTime);
-			sprintf(arr,"%02d:%02d:%02d-%d-%02d/%02d/%02d	Normal		temperature=%0.2lf warning=%0.2lf",
+			sprintf(arr,"%02d:%02d:%02d-%d-%02d/%02d/%02d     Normal		temperature=%0.2lf, warning=%0.2lf",
 					dateTime.hours,dateTime.min,dateTime.sec,dateTime.weekDay,dateTime.day,
 					dateTime.month, dateTime.year,temp,mySystem->getWarning());
 			eventsLogFile->write(arr,sizeof(arr));
@@ -155,6 +230,15 @@ extern "C" void systemTask(void* argument)
 	}
 }
 
+/**
+ * @brief  saveTask
+ *         save every 1 minutes the temperature into temp file
+ *         @note
+ *
+ *
+ * @param  void* argument - a potential argument
+ * @retval none
+ */
 extern "C" void saveTask(void* argument)
 {
 	osSemaphoreAcquire(dhtDataReadyHandle, osWaitForever);
@@ -168,9 +252,6 @@ extern "C" void saveTask(void* argument)
 				dateTime.sec,dateTime.weekDay,dateTime.day, dateTime.month, dateTime.year,temp);
 		tempFile->write(arr,sizeof(arr));
 
-		osDelay(5000);
+		osDelay(60000);
 	}
 }
-
-
-

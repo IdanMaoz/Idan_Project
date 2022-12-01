@@ -17,10 +17,14 @@ extern Communication* com;
 #define MAX_BUFFER_LENGTH 100
 #define MAX_COMMANDS 20
 
-
-
-
-
+/**
+ * @brief  Communication
+ *         init the communication
+ *         @note
+ *
+ *
+ * @param  none
+ */
 Communication::Communication()
 {
 	memset(_cmdbuffer,0,sizeof(_cmdbuffer));
@@ -28,7 +32,15 @@ Communication::Communication()
 	_cmdprint = 0;
 }
 
-
+/**
+ * @brief  task
+ *         recieve the data
+ *         @note
+ *
+ *
+ * @param  none
+ * @retval 0 if the char isn't /n or /r, 1 if it is
+ */
  int Communication::task()
 {
 	uint8_t ch;
@@ -88,6 +100,15 @@ Communication::Communication()
 	return 0;
 }
 
+ /**
+  * @brief  handle
+  *         handle the data
+  *         @note
+  *
+  *
+  * @param  none
+  * @retval none
+  */
  void Communication::handle()
 {
 	char cmd[20];
@@ -99,9 +120,18 @@ Communication::Communication()
 	{
 		return;
 	}
-
 	container.findCommand(cmd, param);
 }
+
+ /**
+  * @brief  comTask
+  *         check if the data is ready
+  *         @note
+  *
+  *
+  * @param  void* argument - a potential argument
+  * @retval none
+  */
  extern "C" void comTask(void* argument)
  {
 	 for(;;){

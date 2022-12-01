@@ -7,6 +7,8 @@
 
 #include <Flash.h>
 #include <iostream>
+
+
 Flash::Flash()
 {
 	_address = 0x08080000;

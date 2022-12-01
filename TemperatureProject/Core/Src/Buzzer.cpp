@@ -1,19 +1,32 @@
-/*
- * Buzzer.cpp
- *
- *  Created on: Nov 17, 2022
- *      Author: student
- */
 
 #include "Buzzer.h"
 #include "main.h"
 
 
 extern  TIM_HandleTypeDef htim3;
+/**
+ * @brief  Buzzer
+ *         init the buzzer
+ *         @note
+ *
+ *
+ * @param  none
+ * @retval none
+ */
 Buzzer::Buzzer() {
 	_bzState = BUZZER_STATE_OFF;
 
 }
+
+/**
+ * @brief  start
+ *         start the buzzer
+ *         @note
+ *
+ *
+ * @param  none
+ * @retval none
+ */
 void Buzzer::start()
 {
 
@@ -23,6 +36,15 @@ void Buzzer::start()
 
 }
 
+/**
+ * @brief  stop
+ *         stop the buzzer
+ *         @note
+ *
+ *
+ * @param  none
+ * @retval none
+ */
 void Buzzer::stop()
 {
 

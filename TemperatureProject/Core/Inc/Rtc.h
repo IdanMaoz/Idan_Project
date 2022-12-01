@@ -29,6 +29,10 @@ public:
 	void getTime(DateTime * dateTime);
 	void setTime(DateTime * dateTime);
 	void timeStrTok(const char * params,DateTime* dateTime);
+private:
+	int bcdToInt(uint8_t bcd);
+	uint8_t intToBcd(int value, int minVal, int maxVal);
+	int checkToken(char* token,int low,int high);
 
 
 };

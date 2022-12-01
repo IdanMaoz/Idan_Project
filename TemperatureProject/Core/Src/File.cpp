@@ -1,18 +1,31 @@
-/*
- * File.cpp
- *
- *  Created on: Nov 27, 2022
- *      Author: student
- */
 
 #include <File.h>
 #include <stdio.h>
 #include <string.h>
 #include "fatfs.h"
+
+/**
+ * @brief  File
+ *         init the file
+ *         @note
+ *
+ *
+ * @param  char* name - the file name
+ * @retval none
+ */
 File::File(char* name) {
 	memcpy(_name,name,sizeof(_name));
 }
 
+/**
+ * @brief  clear
+ *         delete the file
+ *         @note
+ *
+ *
+ * @param  none
+ * @retval none
+ */
 void File::clear()
 {
 	FRESULT fres;
@@ -30,6 +43,15 @@ void File::clear()
 	}
 }
 
+/**
+ * @brief  read
+ *         read the file
+ *         @note
+ *
+ *
+ * @param none
+ * @retval none
+ */
 void File::read()
 {
 	FIL fil;
@@ -54,6 +76,16 @@ void File::read()
 	f_close(&fil);
 }
 
+/**
+ * @brief  write
+ *         write to the file
+ *         @note
+ *
+ *
+ * @param  char* data - string
+ * @param size_t size - the size of the string
+ * @retval none
+ */
 void File::write(char* data,size_t size)
 {
 	FRESULT fres;

@@ -12,20 +12,49 @@
 #define RTC_START_STOP      (1 << 7)
 #define RTC_DATE_TIME_SIZE  7
 
-
-
+/**
+ * @brief  Rtc
+ *         init the rtc
+ *         @note
+ *
+ *
+ * @param  I2C_HandleTypeDef* hi2c - the hi2c of rtc
+ * @param  uint8_t devAddr - the address of rtc
+ * @retval none
+ */
 Rtc::Rtc(I2C_HandleTypeDef* hi2c,uint8_t devAddr) {
 	_hi2c = hi2c;
 	_devAddr = devAddr;
 
 }
 
-static int bcdToInt(uint8_t bcd)
+/**
+ * @brief  bcdToInt
+ *         convert bcd to int
+ *         @note
+ *
+ *
+ * @param  uint8_t bcd - the number in bcd
+ * @retval the number in int
+ */
+int Rtc::bcdToInt(uint8_t bcd)
 {
 	return (bcd >> 4) * 10 + (bcd & 0x0F);
 }
 
-static uint8_t intToBcd(int value, int minVal, int maxVal)
+/**
+ * @brief  intToBcd
+ *         convert int to bcd
+ *         @note
+ *
+ *
+ * @param  int value - the number in int
+ * @param int minVal - the minimum that value can be
+ * @param int maxVal - the maximum that value can be
+ * @retval 0 if value isn't in range, the number in bcd if it is in range
+ */
+
+uint8_t Rtc::intToBcd(int value, int minVal, int maxVal)
 {
 	if (value < minVal || value > maxVal) {
 		return 0;
@@ -34,6 +63,15 @@ static uint8_t intToBcd(int value, int minVal, int maxVal)
 	return ((value / 10) << 4) | (value % 10);
 }
 
+/**
+ * @brief  getTime
+ *         get the time from rtc
+ *         @note
+ *
+ *
+ * @param  DateTime* dateTime - to insert the time
+ * @retval none
+ */
 void Rtc::getTime(DateTime * dateTime)
 {
 	uint8_t buffer[RTC_DATE_TIME_SIZE];
@@ -50,6 +88,15 @@ void Rtc::getTime(DateTime * dateTime)
 	dateTime->year = bcdToInt(buffer[6]);
 }
 
+/**
+ * @brief  setTime
+ *         set the rtc time
+ *         @note
+ *
+ *
+ * @param  DateTime* dateTime - to set the time
+ * @retval none
+ */
 void Rtc::setTime(DateTime * dateTime)
 {
 	uint8_t buffer[RTC_DATE_TIME_SIZE];
@@ -62,8 +109,21 @@ void Rtc::setTime(DateTime * dateTime)
 	buffer[5] = intToBcd(dateTime->month, 1, 12);
 	buffer[6] = intToBcd(dateTime->year, 1, 99);
 	HAL_I2C_Mem_Write(_hi2c, _devAddr, 0, 1, buffer, RTC_DATE_TIME_SIZE, 0xFF);
+	printf("Time set successfully\r\n");
 }
-static int checkToken(char* token,int low,int high)
+
+/**
+ * @brief  checkToken
+ *         to check if the number is in range
+ *         @note
+ *
+ *
+ * @param  char* token - string number
+ * @param int low - the minimum that number can be
+ * @param int high - the maximum that number can be
+ * @retval 0 if number isn't in range, 1 if it is
+ */
+int Rtc::checkToken(char* token,int low,int high)
 {
 	int tokInt = atoi(token);
 	if(tokInt < low || tokInt > high){
@@ -72,6 +132,17 @@ static int checkToken(char* token,int low,int high)
 	}
 	return 1;
 }
+
+/**
+ * @brief  timeStrTok
+ *         split the time char
+ *         @note
+ *
+ *
+ * @param  const char* params - string of the time
+ * @param DateTime* dateTime - time to insert inside
+ * @retval none
+ */
 void Rtc::timeStrTok(const char * params,DateTime* dateTime)
 {
 	char* token;
@@ -118,7 +189,3 @@ void Rtc::timeStrTok(const char * params,DateTime* dateTime)
 	}
 	setTime(dateTime);
 }
-
-
-
-

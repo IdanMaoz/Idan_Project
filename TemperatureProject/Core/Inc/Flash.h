@@ -11,13 +11,21 @@
 #include <stdint.h>
 class Flash {
 	uint32_t _address;
+	static Flash* _instance;
 public:
-	Flash();
+	static Flash* getInstance()
+	{
+		if(!_instance){
+				_instance = new Flash;
+			}
+			return _instance;
+	}
 	void erase();
 	void program(uint64_t* array,uint32_t size);
 	uint32_t getAddres();
 private:
 	void pageSelect(FLASH_EraseInitTypeDef* page);
+	Flash();
 
 };
 

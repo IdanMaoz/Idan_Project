@@ -36,7 +36,6 @@ public:
 	uint8_t alreadyRead();
 	uint8_t wait();
 	double getTemperature();
-	void printTemperature();
 private:
 	void insertValue();
 };

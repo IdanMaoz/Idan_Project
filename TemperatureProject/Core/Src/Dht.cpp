@@ -14,6 +14,17 @@ extern osSemaphoreId_t dhtSemHandle;
 extern osSemaphoreId dhtDataReadyHandle;
 extern TIM_HandleTypeDef htim16;
 extern Dht* dht;
+
+/**
+ * @brief  Dht
+ *         init the dht
+ *         @note
+ *
+ *
+ * @param  GPIO_TypeDef* gpioPort - the port of the dht
+ * @param uint16_t gpioPin - the pin of the dht
+ * @retval none
+ */
 Dht::Dht(GPIO_TypeDef* gpioPort,  uint32_t gpioPin) {
 	_gpioPort=gpioPort;
 	_gpioPin=gpioPin;
@@ -25,11 +36,30 @@ Dht::Dht(GPIO_TypeDef* gpioPort,  uint32_t gpioPin) {
 	_wait = 0;
 
 }
+
+/**
+ * @brief  insertValue
+ *         insert the temperature to the class member
+ *         @note
+ *
+ *
+ * @param  none
+ * @retval none
+ */
 void Dht::insertValue(){
 	_temperature=(double)_bytesArr[2]+((double)_bytesArr[3])/10;
 
 }
 
+/**
+ * @brief  onGpioInterrupt
+ *         get data from dht
+ *         @note
+ *
+ *
+ * @param uint32_t gpioPin - the pin of the dht
+ * @retval none
+ */
 void Dht::onGpioInterrupt(uint32_t pin)
 {
 	if(pin != _gpioPin)
@@ -65,6 +95,15 @@ void Dht::onGpioInterrupt(uint32_t pin)
 	}
 }
 
+/**
+ * @brief  readAsync
+ *         start the dht process
+ *         @note
+ *
+ *
+ * @param  none
+ * @retval none
+ */
 void Dht::readAsync()
 {
 	GPIO_InitTypeDef gpioInitStruct;
@@ -83,6 +122,16 @@ void Dht::readAsync()
 	osSemaphoreRelease(dhtSemHandle);
 
 }
+
+/**
+ * @brief  hasData
+ *         check if the data recieved
+ *         @note
+ *
+ *
+ * @param  none
+ * @retval 0 if data isn't recieved, 1 if the data recieved
+ */
 int Dht::hasData()
 {
 	if(_dhtState==DHT_STATE_DATA_RECIVED){
@@ -94,23 +143,45 @@ int Dht::hasData()
 	return 0;
 }
 
+/**
+ * @brief  getTemperature
+ *         get the temperature
+ *         @note
+ *
+ *
+ * @param  none
+ * @retval the temperature
+ */
 double Dht::getTemperature()
 {
 	return _temperature;
 
 }
 
-void Dht::printTemperature()
-{
-
-	printf("The temperature is: %0.2lf\r\n",getTemperature());
-
-}
+/**
+ * @brief  alreadyRead
+ *         check if dht already read
+ *         @note
+ *
+ *
+ * @param  none
+ * @retval 0 if dht wasn't read , 1 if he alreay read
+ */
 uint8_t Dht::alreadyRead()
 {
 	return _read;
 
 }
+
+/**
+ * @brief  wait
+ *         check if dht need to wait
+ *         @note
+ *
+ *
+ * @param  none
+ * @retval 0 if dht need to wait , 1 if not
+ */
 uint8_t Dht::wait()
 {
 
@@ -118,7 +189,15 @@ uint8_t Dht::wait()
 
 }
 
-
+/**
+ * @brief  fallingInterrupt
+ *         pulls voltage up
+ *         @note
+ *
+ *
+ * @param  none
+ * @retval none
+ */
 void Dht::fallingInterrupt()
 {
 	HAL_GPIO_WritePin(_gpioPort, _gpioPin, GPIO_PIN_SET);
@@ -133,6 +212,15 @@ void Dht::fallingInterrupt()
 	_wait = 1;
 }
 
+/**
+ * @brief  dhtTask
+ *         manage the dht process
+ *         @note
+ *
+ *
+ * @param  void* argument - a potential argument
+ * @retval none
+ */
 extern "C" void dhtTask(void* argument){
 	for(;;){
 		osSemaphoreAcquire(dhtSemHandle, osWaitForever);
@@ -145,7 +233,6 @@ extern "C" void dhtTask(void* argument){
 			osDelay(1);
 		}
 		else if(dht->hasData()){
-			//dht->printTemperature();
 			dht->fallingInterrupt();
 			osSemaphoreRelease(dhtDataReadyHandle);
 			osDelay(1000);

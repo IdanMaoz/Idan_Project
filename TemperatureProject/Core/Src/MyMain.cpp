@@ -11,7 +11,6 @@
 #include "Led.h"
 #include "Buzzer.h"
 #include "LedGpio.h"
-#include "LedPwm.h"
 #include "Button.h"
 #include "CliCommand.h"
 #include "SystemMonitoring.h"
@@ -36,6 +35,7 @@ Led * redLed;
 Led* blueLed;
 Dht* dht;
 Rtc* rtc;
+Flash* Flash::_instance = 0;
 Flash* flash;
 SDCard* sdCard;
 File* tempFile;
@@ -43,7 +43,7 @@ File* eventsLogFile;
 Communication* com;
  void myMain()
  {
-	flash = new Flash;
+	flash = flash->getInstance();
 	redLed = new LedGpio(LED2_GPIO_Port,LED2_Pin);
 	btn1 = new Button(SW1_GPIO_Port,SW1_Pin);
 	btn2 = new Button(SW2_GPIO_Port,SW2_Pin);
@@ -59,6 +59,13 @@ Communication* com;
 	eventsLogFile = new File(eventsLogFileName);
 	com = new Communication;
 
+	printf("Supported Commands:\r\n");
+	printf("warning [number]\r\n"
+			"critical [number]\r\n"
+			"date [hours:minutes:seconds-dayInWeek-day/month/year]\r\n"
+			"print\r\n"
+			"clear\r\n\r\n");
+
 	 CliCommand::CliInit();
 }
  void HAL_GPIO_EXTI_Callback(uint16_t pin)
@@ -69,3 +76,4 @@ Communication* com;
 		dht->onGpioInterrupt(pin);
 	}
  }
+

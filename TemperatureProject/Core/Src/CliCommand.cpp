@@ -1,7 +1,6 @@
 
 #include "CliCommand.h"
 #include "CliContainer.h"
-#include "Dht.h"
 #include "Rtc.h"
 #include "File.h"
 #include "SystemMonitoring.h"
@@ -42,14 +41,7 @@ public:
 	void doCommand(const char* param) override
 	{
 		DateTime time;
-		DateTime dateTime;
-		rtc->getTime(&dateTime);
-				printf("%02d:%02d:%02d-%d-%02d/%02d/%02d\r\n",
-						dateTime.hours, dateTime.min, dateTime.sec,
-						dateTime.weekDay,
-						dateTime.day, dateTime.month, dateTime.year);
 		_rtc->timeStrTok(param, &time);
-
 	}
 };
 class printLogFile: public CliCommand{
@@ -73,6 +65,15 @@ public:
 
 };
 
+/**
+ * @brief  CliInit
+ *         init the cliCommand
+ *         @note
+ *
+ *
+ * @param  none
+ * @retval none
+ */
 
 void CliCommand::CliInit()
 {
