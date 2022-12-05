@@ -38,7 +38,15 @@ static Command _commandsArr[MAX_COMMANDS];
 static int _CommandArrLen=0;
 
 
-
+/**
+ * @brief  task
+ *         recieve the data
+ *         @note
+ *
+ *
+ * @param  none
+ * @retval 0 if the char isn't /n or /r, 1 if it is
+ */
  int task()
 {
 	uint8_t ch;
@@ -98,6 +106,15 @@ static int _CommandArrLen=0;
 	return 0;
 }
 
+ /**
+  * @brief  handle
+  *         handle the data
+  *         @note
+  *
+  *
+  * @param  none
+  * @retval none
+  */
  void handle()
 {
 	char cmd[20];
@@ -121,6 +138,15 @@ static int _CommandArrLen=0;
 
 }
 
+ /**
+   * @brief  Communication_handleTask
+   *         check if the data is ready
+   *         @note
+   *
+   *
+   * @param  void* argument - a potential argument
+   * @retval none
+   */
 void Communication_handleTask(void *argument)
 {
 	for(;;){
@@ -129,7 +155,17 @@ void Communication_handleTask(void *argument)
 		}
 	}
 }
-
+/**
+  * @brief  Communication_register
+  *         add to commands array  the command
+  *         @note
+  *
+  *
+  * @param  char* commandName - the command name
+  * @param HandlerFunc func - the function that the command used
+  * @param void* object - the object of the command
+  * @retval none
+  */
 void Communication_register(char* commandName, HandlerFunc func,void* object)
 {
 

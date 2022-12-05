@@ -22,7 +22,7 @@ public:
 	}
 	void erase();
 	void program(uint64_t* array,uint32_t size);
-	uint32_t getAddres();
+	uint32_t getAddress();
 private:
 	void pageSelect(FLASH_EraseInitTypeDef* page);
 	Flash();

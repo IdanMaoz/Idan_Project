@@ -7,6 +7,18 @@
 
 #include "Button.h"
 #include "stdio.h"
+
+/**
+ * @brief  Button_init
+ *         init the button
+ *         @note
+ *
+ *
+ * @param Button* button - the button
+ * @param  GPIO_TypeDef* gpioPort - the port of the button
+ * @param uint16_t gpioPin - the pin of the button
+ * @retval none
+ */
 void Button_init(Button* button, GPIO_TypeDef* gpioPort, uint16_t gpioPin)
 {
 
@@ -14,9 +26,29 @@ void Button_init(Button* button, GPIO_TypeDef* gpioPort, uint16_t gpioPin)
 	button->gpioPin = gpioPin;
 	button->btnState = BUTTON_STATE_NONE;
 }
+
+/**
+ * @brief  Button_getState
+ *         get the state of the button
+ *         @note
+ *
+ *
+ * @param  Button* button - the button
+ * @retval the state of button
+ */
 ButtonState Button_getState(Button* button){
 	return button->btnState;
 }
+
+/**
+ * @brief  Button_pressTask
+ *         handle the button press
+ *         @note
+ *
+ *
+ * @param void* argument - a potential argument
+ * @retval none
+ */
 void Button_pressTask(void *argument)
 {
 	Button* btn = (Button*)argument;

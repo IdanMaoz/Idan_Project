@@ -36,18 +36,48 @@ static const int _daysUntilMonth[] = {
 		365
 };
 
+/**
+ * @brief  Rtc_init
+ *         init the rtc
+ *         @note
+ *
+ *
+ * @param Rtc* rtc - the rtc
+ * @param  I2C_HandleTypeDef* hi2c - the hi2c of rtc
+ * @param  uint8_t devAddr - the address of rtc
+ * @retval none
+ */
 void Rtc_init(Rtc * rtc, I2C_HandleTypeDef * hi2c, uint32_t devAddr)
 {
 	rtc->hi2c = hi2c;
 	rtc->devAddr = devAddr;
-
-
 }
 
+/**
+ * @brief  bcdToInt
+ *         convert bcd to int
+ *         @note
+ *
+ *
+ * @param  uint8_t bcd - the number in bcd
+ * @retval the number in int
+ */
 static int bcdToInt(uint8_t bcd)
 {
 	return (bcd >> 4) * 10 + (bcd & 0x0F);
 }
+
+/**
+ * @brief  intToBcd
+ *         convert int to bcd
+ *         @note
+ *
+ *
+ * @param  int value - the number in int
+ * @param int minVal - the minimum that value can be
+ * @param int maxVal - the maximum that value can be
+ * @retval 0 if value isn't in range, the number in bcd if it is in range
+ */
 static uint8_t intToBcd(int value, int minVal, int maxVal)
 {
 	if (value < minVal || value > maxVal) {
@@ -56,6 +86,16 @@ static uint8_t intToBcd(int value, int minVal, int maxVal)
 	return ((value / 10) << 4) | (value % 10);
 }
 
+/**
+ * @brief  Rtc_getTime
+ *         get the time from rtc
+ *         @note
+ *
+ *
+ *@param Rtc* rtc- the rtc
+ * @param  DateTime* dateTime - to insert the time
+ * @retval none
+ */
 void Rtc_getTime(Rtc * rtc, DateTime * dateTime)
 {
 	uint8_t buffer[RTC_DATE_TIME_SIZE];
@@ -73,6 +113,15 @@ void Rtc_getTime(Rtc * rtc, DateTime * dateTime)
 	
 }
 
+/**
+ * @brief  Rtc_getSeconds
+ *         get the seconds from rtc
+ *         @note
+ *
+ *
+ * @param  Rtc* rtc - the rtc
+ * @retval the rtc in seconds
+ */
 uint32_t Rtc_getSeconds(Rtc * rtc)
 {
 	// calculate seconds from 00:00:00 1/1/2020
@@ -95,6 +144,15 @@ uint32_t Rtc_getSeconds(Rtc * rtc)
 	return seconds;
 }
 
+/**
+ * @brief  Rtc_convertToSec
+ *         convert time to be in seconds
+ *         @note
+ *
+ *
+ * @param  DateTime * dateTime - the time
+ * @retval the time in seconds
+ */
 uint32_t Rtc_convertToSec(DateTime * dateTime)
 {
 	// calculate seconds from 00:00:00 1/1/2020
@@ -113,6 +171,16 @@ uint32_t Rtc_convertToSec(DateTime * dateTime)
 	seconds += (dateTime->year / 4) * SecondsInDay;
 	return seconds;
 }
+
+/**
+ * @brief  Rtc_setTime
+ *         set the rtc time
+ *         @note
+ *
+ *
+ * @param  DateTime* dateTime - to set the time
+ * @retval none
+ */
 void Rtc_setTime(Rtc * rtc)
 {
 	uint8_t buffer[RTC_DATE_TIME_SIZE];

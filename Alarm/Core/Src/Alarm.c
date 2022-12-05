@@ -22,6 +22,16 @@
 Alarm alarms[maxAlarms];
 uint32_t alarmsLen = 0;
 
+/**
+ * @brief  Alarm_add
+ *         add alarm
+ *         @note
+ *
+ *
+ * @param char* name - the name of the alarm
+ * @param DateTime dateTime - the time of the alarm
+ * @retval 0 if the alarm doesn't exists, 1 if he exists.
+ */
 int Alarm_add(char * name,DateTime dateTime)
 {
 	for(int i=0;i<alarmsLen;i++){
@@ -45,6 +55,16 @@ int Alarm_add(char * name,DateTime dateTime)
 	HAL_FLASH_Lock();
 	return 1;
 }
+
+/**
+ * @brief  Alarm_delete
+ *         delete alarm
+ *         @note
+ *
+ *
+ * @param char* name - the name of the alarm
+ * @retval 0 if the alarm doesn't exists, 1 if he exists and deleted.
+ */
 int Alarm_delete(char * name)
 {
 	for(int i=0;i<alarmsLen;i++){
@@ -64,11 +84,33 @@ int Alarm_delete(char * name)
 	return 0;
 
 }
+
+/**
+ * @brief  Alarm_stop
+ *         stop alarm
+ *         @note
+ *
+ *
+ * @param char* name - the name of the alarm
+ * @retval none
+ */
 void Alarm_stop(char * name)//ask what they mean
 {
 
 	Buzzer_changeToOff(&bz1);
+
 }
+
+/**
+ * @brief  Alarm_changeMelody
+ *         change the alarm melody
+ *         @note
+ *
+ *
+ * @param char* name - the name of the alarm
+ * @param char* melody - the melody of the alarm
+ * @retval 0 if the alarm doesn't exists, 1 if he exists and the melody changed.
+ */
 int Alarm_changeMelody(char * name,char* melody)
 {
 	for(int i=0;i<alarmsLen;i++){
@@ -85,6 +127,15 @@ int Alarm_changeMelody(char * name,char* melody)
 	return 0;
 }
 
+/**
+ * @brief  Alarm_clearAll
+ *         deleted all alarms(change them to not active - isActive = 0)
+ *         @note
+ *
+ *
+ * @param none
+ * @retval none
+ */
 void Alarm_clearAll()
 {
 	for(int i=0;i<alarmsLen;i++){
@@ -98,6 +149,16 @@ void Alarm_clearAll()
 	HAL_FLASH_Lock();
 }
 
+/**
+ * @brief  Alarm_edit
+ *         edit the alarm time
+ *         @note
+ *
+ *
+ * @param char* name - the name of the alarm
+ * @param DateTime dateTime - the time of the alarm
+ * @retval none
+ */
 void Alarm_edit(char * name,DateTime dateTime)
 {
 	for(int i=0;i<alarmsLen;i++){
@@ -107,6 +168,16 @@ void Alarm_edit(char * name,DateTime dateTime)
 	}
 }
 
+/**
+ * @brief  addSnoozeTime
+ *         change alarm snooze
+ *         @note
+ *
+ *
+ * @param char* name - the name of the alarm
+ * @param uint32_t count - the snooze count of alarm
+ * @retval none
+ */
 void addSnoozeTime(char * name,uint32_t count)
 {
 	for(int i=0;i<alarmsLen;i++){
@@ -116,7 +187,15 @@ void addSnoozeTime(char * name,uint32_t count)
 		}
 }
 
-
+/**
+ * @brief  Alarm_startTask
+ *         check if the time is equal to alarm time and handle the alarm
+ *         @note
+ *
+ *
+ * @param void* argument - a potential argument
+ * @retval none
+ */
 void Alarm_startTask(void* argument)
 {
 	Rtc* rtc = (Rtc*)argument;
@@ -148,6 +227,15 @@ void Alarm_startTask(void* argument)
 	}
 }
 
+/**
+ * @brief  Alarm_print
+ *         print all the alarms
+ *         @note
+ *
+ *
+ * @param none
+ * @retval none
+ */
 void Alarm_print(){
 	printf("The existing alarms are:\r\n");
 	for(int i=0;i<alarmsLen;i++){
@@ -158,6 +246,15 @@ void Alarm_print(){
 	}
 }
 
+/**
+ * @brief  Alarm_flashToAlarms
+ *         save all alarms in flash
+ *         @note
+ *
+ *
+ * @param none
+ * @retval none
+ */
 void Alarm_flashToAlarms()
 {
 	for (int i = 0 ; i<sizeof(alarms)/sizeof(Alarm); i++)

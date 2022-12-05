@@ -34,7 +34,7 @@ extern osSemaphoreId dhtDataReadyHandle;
  */
 SystemMonitoring::SystemMonitoring()
 {
-	Threshold* threshold = (Threshold*)(flash->getAddres());
+	Threshold* threshold = (Threshold*)(flash->getAddress());
 	if(threshold ->_magicNumber != 123456){
 		_threshold._magicNumber = 123456;
 		_threshold._warning = 26.0;

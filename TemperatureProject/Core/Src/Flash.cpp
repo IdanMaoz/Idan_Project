@@ -8,11 +8,29 @@
 #include <Flash.h>
 #include <iostream>
 
-
+/**
+ * @brief  Flash
+ *         init the flash
+ *         @note
+ *
+ *
+ * @param  none
+ * @retval none
+ */
 Flash::Flash()
 {
 	_address = 0x08080000;
 }
+
+/**
+ * @brief  pageSelect
+ *         handle the flash page
+ *         @note
+ *
+ *
+ * @param  FLASH_EraseInitTypeDef* flash - the flash
+ * @retval none
+ */
 void Flash::pageSelect(FLASH_EraseInitTypeDef* flash)
 {
 	flash->TypeErase = FLASH_TYPEERASE_PAGES;
@@ -25,12 +43,32 @@ void Flash::pageSelect(FLASH_EraseInitTypeDef* flash)
 	flash->Page = (_address - 0x80000000)/2048;
 	flash->NbPages = 1;
 }
-uint32_t Flash::getAddres()
+
+/**
+ * @brief  getAddress
+ *         get the flash address
+ *         @note
+ *
+ *
+ * @param  none
+ * @retval the adress
+ */
+
+uint32_t Flash::getAddress()
 {
 	return _address;
 
 }
 
+/**
+ * @brief  erase
+ *         erase the flash data
+ *         @note
+ *
+ *
+ * @param  none
+ * @retval none
+ */
 void Flash::erase()
 {
 	static uint32_t pageerror = 0;
@@ -40,6 +78,17 @@ void Flash::erase()
 		printf("Erase failed\r\n");
 	}
 }
+
+/**
+ * @brief  program
+ *         write to the flash
+ *         @note
+ *
+ *
+ * @param  uint64_t* array - the data
+ * @param  uint32_t size - the data size
+ * @retval none
+ */
 void Flash::program(uint64_t* array,uint32_t size)
 {
 	for (uint32_t i = 0 ; i<size/8; i++){
