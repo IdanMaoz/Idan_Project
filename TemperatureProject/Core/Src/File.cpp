@@ -13,8 +13,9 @@
  * @param  char* name - the file name
  * @retval none
  */
-File::File(char* name) {
-	memcpy(_name,name,sizeof(_name));
+File::File(const char* name)
+{
+	strncpy(_name,name,sizeof(_name));
 }
 
 /**

@@ -7,15 +7,17 @@
 
 #ifndef INC_DHT_H_
 #define INC_DHT_H_
+
 #include "main.h"
-typedef enum DhtState_
+
+enum DhtState
 {
 	DHT_STATE_AWAITING_RESPONSE_START,
 	DHT_STATE_AWAITING_RESPONSE_END,
 	DHT_STATE_RECEIVING_BITS,
 	DHT_STATE_DATA_RECIVED
 
-}DhtState;
+};
 
 class Dht {
 private:
@@ -31,7 +33,7 @@ public:
 	Dht(GPIO_TypeDef* gpioPort,  uint32_t gpioPin);
 	void readAsync();
 	void onGpioInterrupt(uint32_t pin);
-	void fallingInterrupt();
+	void pullUp();
 	int hasData();
 	uint8_t alreadyRead();
 	uint8_t wait();

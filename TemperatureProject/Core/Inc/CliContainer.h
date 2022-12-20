@@ -7,7 +7,9 @@
 
 #ifndef SRC_CLICONTAINER_H_
 #define SRC_CLICONTAINER_H_
+
 #include "CliCommand.h"
+
 class CliContainer {
 private:
 	CliCommand* _commands[20];

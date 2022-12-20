@@ -8,9 +8,9 @@
 #include "Button.h"
 #include "Flash.h"
 #include "File.h"
-#include "Rtc.h"
 #include <iostream>
 #include <cstring>
+
 extern Rtc* rtc;
 extern Dht* dht;
 extern Led* redLed;
@@ -175,20 +175,20 @@ double SystemMonitoring::getCritical()
  */
 extern "C" void systemTask(void* argument)
 {
-
+	char str[100];
+	DateTime dateTime;
 	for(;;){
 		double temp = dht->getTemperature();
 		if(temp > mySystem->getCritical()){
 			if(mySystem->getSystemState() == STATE_WARNING || mySystem->getSystemState() == STATE_NORMAL){
 				mySystem->setSystemState(STATE_CRITICAL);
 				bz1->start();
-				char arr[100];
-				DateTime dateTime;
 				rtc->getTime(&dateTime);
-				sprintf(arr,"%02d:%02d:%02d-%d-%02d/%02d/%02d     Critical       temperature=%0.2lf, critical=%0.2lf",
+				sprintf(str,"%02d:%02d:%02d-%d-%02d/%02d/%02d     Critical       temperature=%0.2lf, critical=%0.2lf",
 						dateTime.hours,dateTime.min,dateTime.sec,dateTime.weekDay,dateTime.day,
 						dateTime.month, dateTime.year,temp,mySystem->getCritical());
-				eventsLogFile->write(arr, strlen(arr));
+
+				eventsLogFile->write(str, strlen(str));
 
 			}
 			redLed->blink();
@@ -203,26 +203,22 @@ extern "C" void systemTask(void* argument)
 				bz1->stop();
 			}
 			if(mySystem->getSystemState() == STATE_NORMAL){
-				char arr[100];
-				DateTime dateTime;
 				rtc->getTime(&dateTime);
-				sprintf(arr,"%02d:%02d:%02d-%d-%02d/%02d/%02d     Warning        temperature=%0.2lf, warning=%0.2lf",
+				sprintf(str,"%02d:%02d:%02d-%d-%02d/%02d/%02d     Warning        temperature=%0.2lf, warning=%0.2lf",
 						dateTime.hours,dateTime.min,dateTime.sec,dateTime.weekDay,dateTime.day,
 						dateTime.month, dateTime.year,temp,mySystem->getWarning());
-				eventsLogFile->write(arr, strlen(arr));
+				eventsLogFile->write(str, strlen(str));
 			}
 
 			mySystem->setSystemState(STATE_WARNING);
 			redLed->on();
 		}
 		else if((temp < mySystem->getWarning()) && (mySystem->getSystemState() != STATE_NORMAL)){
-			char arr[100];
-			DateTime dateTime;
 			rtc->getTime(&dateTime);
-			sprintf(arr,"%02d:%02d:%02d-%d-%02d/%02d/%02d     Normal         temperature=%0.2lf, warning=%0.2lf",
+			sprintf(str,"%02d:%02d:%02d-%d-%02d/%02d/%02d     Normal         temperature=%0.2lf, warning=%0.2lf",
 					dateTime.hours,dateTime.min,dateTime.sec,dateTime.weekDay,dateTime.day,
 					dateTime.month, dateTime.year,temp,mySystem->getWarning());
-			eventsLogFile->write(arr, strlen(arr));
+			eventsLogFile->write(str, strlen(str));
 			mySystem->setSystemState(STATE_NORMAL);
 			redLed->off();
 		}
@@ -242,11 +238,11 @@ extern "C" void systemTask(void* argument)
 extern "C" void saveTask(void* argument)
 {
 	osSemaphoreAcquire(dhtDataReadyHandle, osWaitForever);
+	char arr[100];
+	DateTime dateTime;
 	for(;;){
 		osSemaphoreAcquire(dhtDataReadyHandle, osWaitForever);
 		double temp = dht->getTemperature();
-		char arr[100];
-		DateTime dateTime;
 		rtc->getTime(&dateTime);
 		sprintf(arr,"%02d:%02d:%02d-%d-%02d/%02d/%02d	temperature=%0.2lf",dateTime.hours,dateTime.min,
 				dateTime.sec,dateTime.weekDay,dateTime.day, dateTime.month, dateTime.year,temp);

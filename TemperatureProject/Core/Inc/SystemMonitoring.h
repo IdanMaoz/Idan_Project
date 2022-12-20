@@ -8,6 +8,7 @@
 #ifndef INC_SYSTEMMONITORING_H_
 #define INC_SYSTEMMONITORING_H_
 #include "stdint.h"
+#include "Rtc.h"
 typedef enum SystemState_
 {
 	STATE_NORMAL,

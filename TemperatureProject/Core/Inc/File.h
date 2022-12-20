@@ -7,12 +7,14 @@
 
 #ifndef INC_FILE_H_
 #define INC_FILE_H_
+
 #include <cstddef>
+
 class File {
 private:
 	 char _name[20];
 public:
-	File(char* name);
+	File(const char* name);
 	void clear();
 	void read();
 	void write(char* data,size_t size);

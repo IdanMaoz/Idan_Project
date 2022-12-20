@@ -1,15 +1,10 @@
-/*
- * Dht.cpp
- *
- *  Created on: Nov 21, 2022
- *      Author: Idan Maoz
- */
 
 #include "Dht.h"
 #include "main.h"
 #include "cmsis_os.h"
 #include <cstring>
 #include <stdio.h>
+
 extern osSemaphoreId_t dhtSemHandle;
 extern osSemaphoreId dhtDataReadyHandle;
 extern TIM_HandleTypeDef htim16;
@@ -25,7 +20,8 @@ extern Dht* dht;
  * @param uint16_t gpioPin - the pin of the dht
  * @retval none
  */
-Dht::Dht(GPIO_TypeDef* gpioPort,  uint32_t gpioPin) {
+Dht::Dht(GPIO_TypeDef* gpioPort,  uint32_t gpioPin)
+{
 	_gpioPort=gpioPort;
 	_gpioPin=gpioPin;
 	_bitCounter = 0;
@@ -34,7 +30,6 @@ Dht::Dht(GPIO_TypeDef* gpioPort,  uint32_t gpioPin) {
 	_temperature = 0.0;
 	_read = 0;
 	_wait = 0;
-
 }
 
 /**
@@ -46,9 +41,9 @@ Dht::Dht(GPIO_TypeDef* gpioPort,  uint32_t gpioPin) {
  * @param  none
  * @retval none
  */
-void Dht::insertValue(){
+void Dht::insertValue()
+{
 	_temperature=(double)_bytesArr[2]+((double)_bytesArr[3])/10;
-
 }
 
 /**
@@ -120,7 +115,6 @@ void Dht::readAsync()
 	_read = 1;
 	_wait = 0;
 	osSemaphoreRelease(dhtSemHandle);
-
 }
 
 /**
@@ -155,7 +149,6 @@ int Dht::hasData()
 double Dht::getTemperature()
 {
 	return _temperature;
-
 }
 
 /**
@@ -170,7 +163,6 @@ double Dht::getTemperature()
 uint8_t Dht::alreadyRead()
 {
 	return _read;
-
 }
 
 /**
@@ -184,13 +176,11 @@ uint8_t Dht::alreadyRead()
  */
 uint8_t Dht::wait()
 {
-
 	return _wait;
-
 }
 
 /**
- * @brief  fallingInterrupt
+ * @brief  pullUp
  *         pulls voltage up
  *         @note
  *
@@ -198,10 +188,9 @@ uint8_t Dht::wait()
  * @param  none
  * @retval none
  */
-void Dht::fallingInterrupt()
+void Dht::pullUp()
 {
 	HAL_GPIO_WritePin(_gpioPort, _gpioPin, GPIO_PIN_SET);
-
 	GPIO_InitTypeDef gpioInitStruct;
 	HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 	gpioInitStruct.Pin = _gpioPin;
@@ -222,6 +211,7 @@ void Dht::fallingInterrupt()
  * @retval none
  */
 extern "C" void dhtTask(void* argument){
+	uint32_t delay = xTaskGetTickCount();
 	for(;;){
 		osSemaphoreAcquire(dhtSemHandle, osWaitForever);
 		if(!dht->alreadyRead()){
@@ -229,13 +219,14 @@ extern "C" void dhtTask(void* argument){
 			osDelay(19);
 		}
 		else if (!dht->wait()){
-			dht->fallingInterrupt();
+			dht->pullUp();
 			osDelay(1);
 		}
 		else if(dht->hasData()){
-			dht->fallingInterrupt();
+			dht->pullUp();
 			osSemaphoreRelease(dhtDataReadyHandle);
-			osDelay(1000);
+			delay+=1000;
+			osDelayUntil(delay);
 		}
 		else{
 			osDelay(1);

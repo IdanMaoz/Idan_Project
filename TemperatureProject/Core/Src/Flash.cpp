@@ -1,9 +1,3 @@
-/*
- * Flash.cpp
- *
- *  Created on: 24 Nov 2022
- *      Author: student
- */
 
 #include <Flash.h>
 #include <iostream>
@@ -33,15 +27,19 @@ Flash::Flash()
  */
 void Flash::pageSelect(FLASH_EraseInitTypeDef* flash)
 {
+	const uint32_t startFirstBankAddr = 0x80000000;
+	const uint32_t startSecondBankAddr = 0x08080000;
+	const uint32_t pageSize = 2048;
+	const uint32_t numberPages = 1;
 	flash->TypeErase = FLASH_TYPEERASE_PAGES;
-	if(_address < 0x08080000){
+	if(_address < startSecondBankAddr){
 		flash->Banks = FLASH_BANK_1;
 	}
 	else{
 		flash->Banks = FLASH_BANK_2;
 	}
-	flash->Page = (_address - 0x80000000)/2048;
-	flash->NbPages = 1;
+	flash->Page = (_address - startFirstBankAddr) / pageSize;
+	flash->NbPages = numberPages;
 }
 
 /**
@@ -57,7 +55,6 @@ void Flash::pageSelect(FLASH_EraseInitTypeDef* flash)
 uint32_t Flash::getAddress()
 {
 	return _address;
-
 }
 
 /**
@@ -91,7 +88,7 @@ void Flash::erase()
  */
 void Flash::program(uint64_t* array,uint32_t size)
 {
-	for (uint32_t i = 0 ; i<size/8; i++){
+	for (uint32_t i = 0 ; i<size/sizeof(uint64_t); i++){
 		if(HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD, (_address)+(i*8), *(array+i)) != HAL_OK){
 			printf("Program failed\r\n");
 			break;

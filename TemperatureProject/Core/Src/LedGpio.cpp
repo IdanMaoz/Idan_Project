@@ -1,12 +1,7 @@
-/*
- * LedGpio.cpp
- *
- *  Created on: Nov 17, 2022
- *      Author: student
- */
 
 #include "LedGpio.h"
 #include "cmsis_os.h"
+
 extern LedGpio* redLed;
 
 /**
@@ -38,7 +33,6 @@ LedGpio::LedGpio(GPIO_TypeDef* gpioPort,uint16_t gpioPin)
  */
 void LedGpio::on()
 {
-
 	_state = LED_STATE_ON;
 	HAL_GPIO_WritePin(_gpioPort, _gpioPin, GPIO_PIN_SET);
 }
@@ -54,7 +48,6 @@ void LedGpio::on()
  */
 void LedGpio::off()
 {
-
 	_state = LED_STATE_OFF;
 	HAL_GPIO_WritePin(_gpioPort, _gpioPin, GPIO_PIN_RESET);
 }

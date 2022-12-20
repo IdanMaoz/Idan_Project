@@ -6,10 +6,10 @@
 #include "SystemMonitoring.h"
 #include <iostream>
 
-
 extern SystemMonitoring* mySystem;
 extern Rtc* rtc;
 extern File* eventsLogFile;
+
 CliContainer container;
 
 class setWarningCommand: public CliCommand{
@@ -25,7 +25,6 @@ public:
 			printf("Warning param isn't number\r\n");
 		}
 	}
-
 };
 
 class setCriticalCommand: public CliCommand{
@@ -41,7 +40,6 @@ public:
 			printf("Critical param isn't number\r\n");
 		}
 	}
-
 };
 
 class setRtcTime: public CliCommand{
@@ -54,6 +52,7 @@ public:
 		_rtc->timeStrTok(param, &time);
 	}
 };
+
 class printLogFile: public CliCommand{
 	File* _file;
 public:
@@ -62,8 +61,8 @@ public:
 	{
 		_file->read();
 	}
-
 };
+
 class clearLogFile: public CliCommand{
 	File* _file;
 public:
@@ -72,7 +71,6 @@ public:
 	{
 		_file->clear();
 	}
-
 };
 
 /**
@@ -84,7 +82,6 @@ public:
  * @param  none
  * @retval none
  */
-
 void CliCommand::CliInit()
 {
 	container.addCommand(new setWarningCommand("warning", mySystem));
@@ -92,6 +89,4 @@ void CliCommand::CliInit()
 	container.addCommand(new setRtcTime("date",rtc));
 	container.addCommand(new printLogFile("print",eventsLogFile));
 	container.addCommand(new clearLogFile("clear",eventsLogFile));
-
-
 }

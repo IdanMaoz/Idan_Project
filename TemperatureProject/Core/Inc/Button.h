@@ -9,12 +9,13 @@
 #define INC_BUTTON_H_
 
 #include "main.h"
-typedef enum ButtonState_
+
+enum ButtonState
 {
 	BUTTON_STATE_NONE,
 	BUTTON_STATE_PRESS,
 
-} ButtonState;
+};
 
 class Button {
 	private:

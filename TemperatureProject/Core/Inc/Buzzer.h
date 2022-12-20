@@ -8,12 +8,12 @@
 #ifndef INC_BUZZER_H_
 #define INC_BUZZER_H_
 
-typedef enum BuzzerState_
+enum BuzzerState
 {
 	BUZZER_STATE_OFF,
 	BUZZER_STATE_ON,
 
-} BuzzerState;
+};
 
 class Buzzer  {
 private:
@@ -22,7 +22,6 @@ public:
 	Buzzer();
 	void start();
 	void stop();
-
 };
 
 #endif /* INC_BUZZER_H_ */

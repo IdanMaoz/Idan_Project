@@ -7,15 +7,16 @@
 
 #ifndef INC_LEDGPIO_H_
 #define INC_LEDGPIO_H_
+
 #include "main.h"
 #include "Led.h"
+
 class LedGpio : public Led {
 private:
 	uint16_t _delay;
 	GPIO_TypeDef* _gpioPort;
 	uint16_t _gpioPin;
 	LedState _state;
-
 public:
 	LedGpio(GPIO_TypeDef* gpioPort,uint16_t gpioPin);
 	void on() override;

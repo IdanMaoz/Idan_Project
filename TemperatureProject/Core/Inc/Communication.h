@@ -7,6 +7,7 @@
 
 #ifndef SRC_COMMUNICATION_H_
 #define SRC_COMMUNICATION_H_
+
 #define MAX_BUFFER_LENGTH 100
 
 class Communication{
@@ -19,9 +20,5 @@ public:
 	int task();
 	void handle();
 };
-
-
-
-
 
 #endif /* SRC_COMMUNICATION_H_ */

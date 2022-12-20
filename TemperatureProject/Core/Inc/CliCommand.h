@@ -9,17 +9,17 @@
 #define SRC_CLICOMMAND_H_
 
 #include<string.h>
+
 class CliCommand {
 private:
-	char name[20];
+	char _name[20];
 public:
 	CliCommand(const char * name) {
-		strcpy(this->name, name);
+		strcpy(this->_name, name);
 	}
-	const char * getName() const { return name; }
+	const char * getName() const { return _name; }
 	virtual ~CliCommand(){};
 	virtual void doCommand(const char* param) = 0;
-
 	static void CliInit();
 };
 

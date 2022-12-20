@@ -14,7 +14,6 @@
 CliContainer::CliContainer() {
 	memset(_commands, 0, sizeof(_commands));
 	_counter = 0;
-
 }
 
 /**
@@ -41,8 +40,8 @@ CliContainer::~CliContainer() {
  * @param CliCommand* command - a Clicommand class
  * @retval none
  */
-void CliContainer::addCommand( CliCommand* command){
-
+void CliContainer::addCommand( CliCommand* command)
+{
 	_commands[_counter] = command;
 	_counter++;
 }

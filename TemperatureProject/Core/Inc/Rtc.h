@@ -7,9 +7,10 @@
 
 #ifndef INC_RTC_H_
 #define INC_RTC_H_
+
 #include "main.h"
 
-typedef struct DateTime_
+struct DateTime
 {
 	int sec;
 	int min;
@@ -18,7 +19,7 @@ typedef struct DateTime_
 	int day;
 	int month;
 	int year;
-} DateTime;
+};
 
 class Rtc {
 private:
@@ -33,8 +34,6 @@ private:
 	int bcdToInt(uint8_t bcd);
 	uint8_t intToBcd(int value, int minVal, int maxVal);
 	int checkToken(char* token,int low,int high);
-
-
 };
 
 #endif /* INC_RTC_H_ */

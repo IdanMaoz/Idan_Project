@@ -10,9 +10,7 @@
 
 class SDCard {
 public:
-
 	void openSystem();
-
 };
 
 #endif /* INC_SDCARD_H_ */

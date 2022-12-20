@@ -1,9 +1,3 @@
-/*
- * SDCard.cpp
- *
- *  Created on: Nov 27, 2022
- *      Author: student
- */
 
 #include "SDCard.h"
 #include "main.h"
@@ -34,8 +28,6 @@ void SDCard::openSystem()
 		else{
 			printf("f_mount error (%i)\r\n", fres);
 		}
-
 	while(1);
 	}
 }
-

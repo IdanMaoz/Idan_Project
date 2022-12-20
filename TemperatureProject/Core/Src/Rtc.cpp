@@ -1,14 +1,9 @@
-/*
- * Rtc.cpp
- *
- *  Created on: Nov 23, 2022
- *      Author: Idan Maoz
- */
 
 #include "Rtc.h"
 #include <string.h>
 #include <stdlib.h>
 #include <iostream>
+
 #define RTC_START_STOP      (1 << 7)
 #define RTC_DATE_TIME_SIZE  7
 
@@ -22,10 +17,10 @@
  * @param  uint8_t devAddr - the address of rtc
  * @retval none
  */
-Rtc::Rtc(I2C_HandleTypeDef* hi2c,uint8_t devAddr) {
+Rtc::Rtc(I2C_HandleTypeDef* hi2c,uint8_t devAddr)
+{
 	_hi2c = hi2c;
 	_devAddr = devAddr;
-
 }
 
 /**
@@ -53,13 +48,11 @@ int Rtc::bcdToInt(uint8_t bcd)
  * @param int maxVal - the maximum that value can be
  * @retval 0 if value isn't in range, the number in bcd if it is in range
  */
-
 uint8_t Rtc::intToBcd(int value, int minVal, int maxVal)
 {
 	if (value < minVal || value > maxVal) {
 		return 0;
 	}
-
 	return ((value / 10) << 4) | (value % 10);
 }
 
@@ -75,9 +68,11 @@ uint8_t Rtc::intToBcd(int value, int minVal, int maxVal)
 void Rtc::getTime(DateTime * dateTime)
 {
 	uint8_t buffer[RTC_DATE_TIME_SIZE];
-	HAL_I2C_Mem_Read(_hi2c, _devAddr, 0, 1, buffer, RTC_DATE_TIME_SIZE, 0xFF);
-
-
+	HAL_StatusTypeDef status = HAL_I2C_Mem_Read(_hi2c, _devAddr, 0, 1, buffer, RTC_DATE_TIME_SIZE, 0xFF);
+	if(status != HAL_OK){
+		printf("Read from rtc failed\r\n");
+		return;
+	}
 	buffer[0] &= ~RTC_START_STOP;
 	dateTime->sec = bcdToInt(buffer[0]);
 	dateTime->min = bcdToInt(buffer[1]);
@@ -100,7 +95,6 @@ void Rtc::getTime(DateTime * dateTime)
 void Rtc::setTime(DateTime * dateTime)
 {
 	uint8_t buffer[RTC_DATE_TIME_SIZE];
-
 	buffer[0] = intToBcd(dateTime->sec, 0, 59);
 	buffer[1] = intToBcd(dateTime->min, 0, 59);
 	buffer[2] = intToBcd(dateTime->hours, 0, 59);
@@ -108,7 +102,11 @@ void Rtc::setTime(DateTime * dateTime)
 	buffer[4] = intToBcd(dateTime->day, 1, 31);
 	buffer[5] = intToBcd(dateTime->month, 1, 12);
 	buffer[6] = intToBcd(dateTime->year, 1, 99);
-	HAL_I2C_Mem_Write(_hi2c, _devAddr, 0, 1, buffer, RTC_DATE_TIME_SIZE, 0xFF);
+	HAL_StatusTypeDef status = HAL_I2C_Mem_Write(_hi2c, _devAddr, 0, 1, buffer, RTC_DATE_TIME_SIZE, 0xFF);
+	if(status != HAL_OK){
+		printf("Write to rtc failed\r\n");
+		return;
+	}
 	printf("Time set successfully\r\n");
 }
 

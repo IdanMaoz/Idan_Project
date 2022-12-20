@@ -20,13 +20,12 @@
 #include "SDCard.h"
 #include "File.h"
 #include <cstring>
-#include <stdio.h>
-#include <iostream>
-
 #include <iostream>
 #include <fstream>
+
 extern TIM_HandleTypeDef htim16;
 extern I2C_HandleTypeDef hi2c1;
+
 Button* btn1;
 Button* btn2;
 Buzzer* bz1;
@@ -41,6 +40,7 @@ SDCard* sdCard;
 File* tempFile;
 File* eventsLogFile;
 Communication* com;
+
  void myMain()
  {
 	flash = flash->getInstance();
@@ -53,21 +53,18 @@ Communication* com;
 	rtc = new Rtc(&hi2c1,0XD0);
 	sdCard = new SDCard;
 	sdCard->openSystem();
-	char tempFileName[] = "tempFile.txt";
-	char eventsLogFileName[] = "logFile.txt";
-	tempFile = new File(tempFileName);
-	eventsLogFile = new File(eventsLogFileName);
+	tempFile = new File("tempFile.txt");
+	eventsLogFile = new File("logFile.txt");
 	com = new Communication;
-
 	printf("Supported Commands:\r\n");
 	printf("warning [number]\r\n"
 			"critical [number]\r\n"
 			"date [hours:minutes:seconds-dayInWeek-day/month/year]\r\n"
 			"print\r\n"
 			"clear\r\n\r\n");
-
 	 CliCommand::CliInit();
 }
+
  void HAL_GPIO_EXTI_Callback(uint16_t pin)
  {
 	btn1->onInterrupt(pin);
